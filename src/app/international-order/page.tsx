@@ -610,18 +610,27 @@ export default function InternationalOrderPage() {
               <h3 className="text-lg font-semibold text-gray-900 mb-4">Need Assistance?</h3>
               <div className="space-y-3">
                 <a
-                  href="mailto:international@souledstore.com"
+                  href="mailto:Info@rawera.com"
                   className="flex items-center gap-3 text-gray-700 hover:text-blue-600 transition-colors"
                 >
                   <EnvelopeIcon className="w-5 h-5" />
-                  <span className="text-sm">international@souledstore.com</span>
+                  <span className="text-sm">Info@rawera.com</span>
                 </a>
                 <a
-                  href="tel:+911234567890"
+                  href="tel:+919946812233"
                   className="flex items-center gap-3 text-gray-700 hover:text-blue-600 transition-colors"
                 >
                   <PhoneIcon className="w-5 h-5" />
-                  <span className="text-sm">+91 123 456 7890</span>
+                  <span className="text-sm">+91 99468 12233</span>
+                </a>
+                <a
+                  href="https://www.instagram.com/the.rawera?igsh=YzA5dzA0dndjOTJ2"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center gap-3 text-gray-700 hover:text-blue-600 transition-colors"
+                >
+                  <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M7.75 2h8.5A5.75 5.75 0 0 1 22 7.75v8.5A5.75 5.75 0 0 1 16.25 22h-8.5A5.75 5.75 0 0 1 2 16.25v-8.5A5.75 5.75 0 0 1 7.75 2zm0 1.5A4.25 4.25 0 0 0 3.5 7.75v8.5A4.25 4.25 0 0 0 7.75 20.5h8.5A4.25 4.25 0 0 0 20.5 16.25v-8.5A4.25 4.25 0 0 0 16.25 3.5zm4.25 3.25a5.25 5.25 0 1 1 0 10.5a5.25 5.25 0 0 1 0-10.5zm0 1.5a3.75 3.75 0 1 0 0 7.5a3.75 3.75 0 0 0 0-7.5zm5.25.75a1 1 0 1 1-2 0a1 1 0 0 1 2 0z" /></svg>
+                  <span className="text-sm">@the.rawera</span>
                 </a>
                 <p className="text-xs text-gray-600 mt-4">
                   Our international team is available Monday-Friday, 9AM-6PM IST

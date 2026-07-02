@@ -22,19 +22,20 @@ interface BulkOrderForm {
   contactPerson: string;
   email: string;
   phone: string;
-  
+
   // Order Details
   productCategory: string;
   productDescription: string;
   quantity: number;
   estimatedBudget: string;
-  
+
   // Additional Information
   deliveryDate: string;
   deliveryAddress: string;
   customizationRequired: boolean;
   customizationDetails: string;
   additionalNotes: string;
+  customImages: File[];
 }
 
 const quantityTiers = [
@@ -73,20 +74,38 @@ export default function BulkOrderPage() {
     deliveryAddress: '',
     customizationRequired: false,
     customizationDetails: '',
-    additionalNotes: ''
+    additionalNotes: '',
+    customImages: []
   });
 
   const handleInputChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
   ) => {
     const { name, value, type } = e.target;
-    
+
     if (type === 'checkbox') {
       const checked = (e.target as HTMLInputElement).checked;
       setFormData(prev => ({ ...prev, [name]: checked }));
     } else {
       setFormData(prev => ({ ...prev, [name]: value }));
     }
+  };
+
+  const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const files = e.target.files;
+    if (files) {
+      const validFiles = Array.from(files).filter(file =>
+        ['image/jpeg', 'image/jpg', 'image/png'].includes(file.type)
+      );
+      setFormData(prev => ({ ...prev, customImages: validFiles }));
+    }
+  };
+
+  const removeImage = (index: number) => {
+    setFormData(prev => ({
+      ...prev,
+      customImages: prev.customImages.filter((_, i) => i !== index)
+    }));
   };
 
   const getDiscountForQuantity = (quantity: number): number => {
@@ -118,6 +137,7 @@ export default function BulkOrderPage() {
     // Simulate API call
     setTimeout(() => {
       console.log('Bulk Order Submitted:', formData);
+      console.log('Customization Images:', formData.customImages);
       toast.success(
         'Bulk Order Request Submitted!',
         'Our team will contact you within 24-48 hours with a detailed quote.'
@@ -137,7 +157,8 @@ export default function BulkOrderPage() {
         deliveryAddress: '',
         customizationRequired: false,
         customizationDetails: '',
-        additionalNotes: ''
+        additionalNotes: '',
+        customImages: []
       });
       
       setIsSubmitting(false);
@@ -382,19 +403,60 @@ export default function BulkOrderPage() {
                   </div>
 
                   {formData.customizationRequired && (
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-2">
-                        Customization Details
-                      </label>
-                      <textarea
-                        name="customizationDetails"
-                        value={formData.customizationDetails}
-                        onChange={handleInputChange}
-                        rows={3}
-                        className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500"
-                        placeholder="Describe your customization requirements (logo placement, colors, text, etc.)"
-                      />
-                    </div>
+                    <>
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                          Customization Details
+                        </label>
+                        <textarea
+                          name="customizationDetails"
+                          value={formData.customizationDetails}
+                          onChange={handleInputChange}
+                          rows={3}
+                          className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500"
+                          placeholder="Describe your customization requirements (logo placement, colors, text, etc.)"
+                        />
+                      </div>
+
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                          Upload Reference Images
+                        </label>
+                        <div className="border-2 border-dashed border-gray-300 rounded-lg p-4 hover:border-orange-500 transition-colors">
+                          <input
+                            type="file"
+                            accept="image/jpeg,image/jpg,image/png"
+                            multiple
+                            onChange={handleImageUpload}
+                            className="w-full text-sm text-gray-600 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:bg-orange-50 file:text-orange-700 file:cursor-pointer hover:file:bg-orange-100"
+                          />
+                          <p className="mt-2 text-xs text-gray-500">
+                            Upload reference images (PNG, JPG) for your customization design
+                          </p>
+                        </div>
+
+                        {formData.customImages.length > 0 && (
+                          <div className="mt-3 grid grid-cols-4 gap-2">
+                            {formData.customImages.map((file, index) => (
+                              <div key={index} className="relative group">
+                                <img
+                                  src={URL.createObjectURL(file)}
+                                  alt={`Preview ${index + 1}`}
+                                  className="w-full h-16 object-cover rounded border border-gray-300"
+                                />
+                                <button
+                                  type="button"
+                                  onClick={() => removeImage(index)}
+                                  className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full w-5 h-5 flex items-center justify-center text-xs opacity-0 group-hover:opacity-100 transition-opacity"
+                                >
+                                  ×
+                                </button>
+                              </div>
+                            ))}
+                          </div>
+                        )}
+                      </div>
+                    </>
                   )}
 
                   <div>
@@ -497,18 +559,27 @@ export default function BulkOrderPage() {
               <h3 className="text-lg font-semibold text-gray-900 mb-4">Need Help?</h3>
               <div className="space-y-3">
                 <a
-                  href="mailto:bulk@souledstore.com"
+                  href="mailto:Info@rawera.com"
                   className="flex items-center gap-3 text-gray-700 hover:text-orange-600 transition-colors"
                 >
                   <EnvelopeIcon className="w-5 h-5" />
-                  <span className="text-sm">bulk@souledstore.com</span>
+                  <span className="text-sm">Info@rawera.com</span>
                 </a>
                 <a
-                  href="tel:+911234567890"
+                  href="tel:+919946812233"
                   className="flex items-center gap-3 text-gray-700 hover:text-orange-600 transition-colors"
                 >
                   <PhoneIcon className="w-5 h-5" />
-                  <span className="text-sm">+91 123 456 7890</span>
+                  <span className="text-sm">+91 99468 12233</span>
+                </a>
+                <a
+                  href="https://www.instagram.com/the.rawera?igsh=YzA5dzA0dndjOTJ2"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center gap-3 text-gray-700 hover:text-orange-600 transition-colors"
+                >
+                  <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M7.75 2h8.5A5.75 5.75 0 0 1 22 7.75v8.5A5.75 5.75 0 0 1 16.25 22h-8.5A5.75 5.75 0 0 1 2 16.25v-8.5A5.75 5.75 0 0 1 7.75 2zm0 1.5A4.25 4.25 0 0 0 3.5 7.75v8.5A4.25 4.25 0 0 0 7.75 20.5h8.5A4.25 4.25 0 0 0 20.5 16.25v-8.5A4.25 4.25 0 0 0 16.25 3.5zm4.25 3.25a5.25 5.25 0 1 1 0 10.5a5.25 5.25 0 0 1 0-10.5zm0 1.5a3.75 3.75 0 1 0 0 7.5a3.75 3.75 0 0 0 0-7.5zm5.25.75a1 1 0 1 1-2 0a1 1 0 0 1 2 0z" /></svg>
+                  <span className="text-sm">@the.rawera</span>
                 </a>
               </div>
             </div>

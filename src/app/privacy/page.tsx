@@ -138,8 +138,9 @@ export default function PrivacyPage() {
               If you have any questions about this Privacy Policy or our data practices, please contact us:
             </p>
             <div className="bg-gray-50 rounded-lg p-4 space-y-2 text-sm text-gray-600">
-              <p><strong>Email:</strong> privacy@souledstore.com</p>
-              <p><strong>Phone:</strong> +91 123 456 7890</p>
+              <p><strong>Email:</strong> <a href="mailto:Info@rawera.com" className="text-orange-600 hover:underline">Info@rawera.com</a></p>
+              <p><strong>Phone:</strong> <a href="tel:+919946812233" className="text-orange-600 hover:underline">+91 99468 12233</a></p>
+              <p><strong>Instagram:</strong> <a href="https://www.instagram.com/the.rawera?igsh=YzA5dzA0dndjOTJ2" target="_blank" rel="noopener noreferrer" className="text-orange-600 hover:underline">@the.rawera</a></p>
               <p><strong>Address:</strong> Mumbai, Maharashtra, India</p>
             </div>
           </section>

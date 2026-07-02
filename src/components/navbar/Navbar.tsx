@@ -101,8 +101,8 @@ export default function NavbarTop({ onHamburgerClick }: { onHamburgerClick?: () 
       <div className="bg-gray-900 text-white py-2">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex justify-between items-center text-sm">
           <div className="flex items-center gap-4">
-            <span>📞 +91 123 456 7890</span>
-            <span className="hidden md:inline">✉️ support@souledstore.com</span>
+            <a href="tel:+919946812233" className="hover:text-orange-400 transition-colors">📞 +91 99468 12233</a>
+            <a href="mailto:Info@rawera.com" className="hidden md:inline hover:text-orange-400 transition-colors">✉️ Info@rawera.com</a>
           </div>
           <div className="flex items-center gap-4">
             <Link href="/track-order" className="hover:text-orange-400 transition-colors">Track Order</Link>
@@ -402,14 +402,18 @@ export default function NavbarTop({ onHamburgerClick }: { onHamburgerClick?: () 
             {/* Contact Info */}
             <div className="mt-4 pt-4 border-t border-gray-200">
               <div className="space-y-2 text-sm text-gray-600">
-                <p className="flex items-center gap-2">
+                <a href="tel:+919946812233" className="flex items-center gap-2 hover:text-orange-600 transition-colors">
                   <span>📞</span>
-                  <span>+91 123 456 7890</span>
-                </p>
-                <p className="flex items-center gap-2">
+                  <span>+91 99468 12233</span>
+                </a>
+                <a href="mailto:Info@rawera.com" className="flex items-center gap-2 hover:text-orange-600 transition-colors">
                   <span>✉️</span>
-                  <span>support@souledstore.com</span>
-                </p>
+                  <span>Info@rawera.com</span>
+                </a>
+                <a href="https://www.instagram.com/the.rawera?igsh=YzA5dzA0dndjOTJ2" target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 hover:text-orange-600 transition-colors">
+                  <span>📷</span>
+                  <span>@the.rawera</span>
+                </a>
               </div>
             </div>
           </div>
