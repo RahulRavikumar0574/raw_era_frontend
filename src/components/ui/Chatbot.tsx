@@ -315,29 +315,7 @@ export const Chatbot: React.FC = () => {
         transition: 'background var(--transition)'
       }}>
         {messages.length === 0 && (
-          <div style={{color: '#888'}}>
-            <div style={{marginBottom: 12}}>Ask me something!</div>
-            <div style={{display: 'flex', flexWrap: 'wrap', gap: 6}}>
-              {QUICK_REPLIES.slice(0, 3).map((reply) => (
-                <button
-                  key={reply}
-                  onClick={() => handleSend(reply)}
-                  style={{
-                    background: '#fff',
-                    border: '1px solid #ffd1a6',
-                    borderRadius: 16,
-                    padding: '6px 12px',
-                    fontSize: 12,
-                    color: 'var(--foreground)',
-                    cursor: 'pointer',
-                    transition: 'all var(--transition)'
-                  }}
-                >
-                  {reply}
-                </button>
-              ))}
-            </div>
-          </div>
+          <div style={{color: '#888', marginBottom: 12}}>Ask me something!</div>
         )}
         {messages.map((msg, i) => (
           <div key={i} style={{
@@ -400,6 +378,33 @@ export const Chatbot: React.FC = () => {
             </span>
           </div>
         )}
+      </div>
+      <div style={{
+        display: 'flex',
+        flexWrap: 'wrap',
+        gap: 6,
+        padding: '8px 16px',
+        background: '#fff8f3',
+        borderTop: '1px solid #ffe2cc'
+      }}>
+        {QUICK_REPLIES.slice(0, 3).map((reply) => (
+          <button
+            key={reply}
+            onClick={() => handleSend(reply)}
+            style={{
+              background: '#fff',
+              border: '1px solid #ffd1a6',
+              borderRadius: 16,
+              padding: '6px 12px',
+              fontSize: 12,
+              color: 'var(--foreground)',
+              cursor: 'pointer',
+              transition: 'all var(--transition)'
+            }}
+          >
+            {reply}
+          </button>
+        ))}
       </div>
       <div style={{
         display: 'flex',
