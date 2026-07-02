@@ -1,4 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
+import { MicrophoneIcon, CameraIcon, MinusIcon, ChatBubbleBottomCenterIcon } from '@heroicons/react/24/outline';
 
 interface ChatMessage {
   from: 'user' | 'bot';
@@ -26,6 +27,7 @@ export const Chatbot: React.FC = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [sessionId, setSessionId] = useState<string>('');
   const [selectedImage, setSelectedImage] = useState<{ data: string; type: string } | null>(null);
+  const [isMinimized, setIsMinimized] = useState(false);
   const recognitionRef = useRef<any>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
@@ -197,62 +199,114 @@ export const Chatbot: React.FC = () => {
   };
 
   return (
-    <div style={{
-      position: 'fixed',
-      bottom: 72,
-      right: 24,
-      width: 340,
-      background: '#fff',
-      border: '1px solid var(--accent)',
-      borderRadius: 'var(--border-radius)',
-      boxShadow: '0 8px 24px #ff690033',
-      zIndex: 1000,
-      transition: 'all var(--transition)',
-      display: 'flex',
-      flexDirection: 'column',
-      maxHeight: 500,
-      overflow: 'hidden'
-    }}
-    className="chatbot"
-    >
-      <div style={{
-        padding: 16,
-        borderBottom: '1px solid #ffe2cc',
-        fontWeight: 'bold',
-        background: 'var(--accent)',
-        color: '#fff',
-        borderTopLeftRadius: 'var(--border-radius)',
-        borderTopRightRadius: 'var(--border-radius)',
-        letterSpacing: 1.2,
-        fontSize: 18,
-        display: 'flex',
-        justifyContent: 'space-between',
-        alignItems: 'center'
-      }}>
-        <span>The Raw Era</span>
+    <>
+      {/* Minimized floating button */}
+      {isMinimized && (
         <button
-          onClick={() => {
-            const chatbotElement = document.querySelector('.chatbot') as HTMLElement;
-            if (chatbotElement) chatbotElement.style.display = 'none';
-          }}
+          onClick={() => setIsMinimized(false)}
           style={{
-            background: 'transparent',
-            border: 'none',
+            position: 'fixed',
+            bottom: 24,
+            right: 24,
+            width: 60,
+            height: 60,
+            background: 'var(--accent)',
             color: '#fff',
+            border: 'none',
+            borderRadius: '50%',
+            boxShadow: '0 8px 24px #ff690033',
             cursor: 'pointer',
-            fontSize: 24,
-            padding: 0,
-            width: 30,
-            height: 30,
+            zIndex: 1000,
             display: 'flex',
             alignItems: 'center',
-            justifyContent: 'center'
+            justifyContent: 'center',
+            transition: 'all var(--transition)'
           }}
-          aria-label="Close chatbot"
+          aria-label="Open chatbot"
         >
-          ×
+          <ChatBubbleBottomCenterIcon style={{ width: 28, height: 28 }} />
         </button>
-      </div>
+      )}
+
+      {/* Main chatbot */}
+      {!isMinimized && (
+        <div style={{
+          position: 'fixed',
+          bottom: 72,
+          right: 24,
+          width: 340,
+          background: '#fff',
+          border: '1px solid var(--accent)',
+          borderRadius: 'var(--border-radius)',
+          boxShadow: '0 8px 24px #ff690033',
+          zIndex: 1000,
+          transition: 'all var(--transition)',
+          display: 'flex',
+          flexDirection: 'column',
+          maxHeight: 500,
+          overflow: 'hidden'
+        }}
+        className="chatbot"
+        >
+          <div style={{
+            padding: 16,
+            borderBottom: '1px solid #ffe2cc',
+            fontWeight: 'bold',
+            background: 'var(--accent)',
+            color: '#fff',
+            borderTopLeftRadius: 'var(--border-radius)',
+            borderTopRightRadius: 'var(--border-radius)',
+            letterSpacing: 1.2,
+            fontSize: 18,
+            display: 'flex',
+            justifyContent: 'space-between',
+            alignItems: 'center'
+          }}>
+            <span>The Raw Era</span>
+            <div style={{ display: 'flex', gap: 8 }}>
+              <button
+                onClick={() => setIsMinimized(true)}
+                style={{
+                  background: 'transparent',
+                  border: 'none',
+                  color: '#fff',
+                  cursor: 'pointer',
+                  fontSize: 20,
+                  padding: 0,
+                  width: 30,
+                  height: 30,
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center'
+                }}
+                aria-label="Minimize chatbot"
+              >
+                <MinusIcon style={{ width: 20, height: 20 }} />
+              </button>
+              <button
+                onClick={() => {
+                  const chatbotElement = document.querySelector('.chatbot') as HTMLElement;
+                  if (chatbotElement) chatbotElement.style.display = 'none';
+                }}
+                style={{
+                  background: 'transparent',
+                  border: 'none',
+                  color: '#fff',
+                  cursor: 'pointer',
+                  fontSize: 24,
+                  padding: 0,
+                  width: 30,
+                  height: 30,
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center'
+                }}
+                aria-label="Close chatbot"
+              >
+                ×
+              </button>
+            </div>
+          </div>
       <div style={{
         padding: 16,
         height: 240,
@@ -379,7 +433,7 @@ export const Chatbot: React.FC = () => {
           }}
           aria-label="Upload image"
         >
-          📷
+          <CameraIcon style={{ width: 18, height: 18 }} />
         </button>
         {selectedImage && (
           <div style={{
@@ -473,7 +527,7 @@ export const Chatbot: React.FC = () => {
           }}
           aria-label="Voice input"
         >
-          <span role="img" aria-label="mic">🎤</span>
+          <MicrophoneIcon style={{ width: 18, height: 18 }} />
         </button>
       </div>
       <style jsx>{`
@@ -483,6 +537,8 @@ export const Chatbot: React.FC = () => {
         }
       `}</style>
     </div>
+      )}
+    </>
   );
 };
 
