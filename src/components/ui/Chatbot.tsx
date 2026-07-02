@@ -406,7 +406,8 @@ export const Chatbot: React.FC = () => {
         alignItems: 'center',
         borderTop: '1px solid #ffe2cc',
         background: '#fff',
-        padding: 12
+        padding: 12,
+        gap: 8
       }}>
         <input
           type="file"
@@ -418,56 +419,61 @@ export const Chatbot: React.FC = () => {
         <button
           onClick={() => fileInputRef.current?.click()}
           style={{
-            background: selectedImage ? 'var(--accent)' : '#fff',
-            color: selectedImage ? '#fff' : 'var(--accent)',
-            border: '1.5px solid var(--accent)',
-            borderRadius: '50%',
-            width: 36,
-            height: 36,
+            background: selectedImage ? 'var(--accent)' : '#f8f8f8',
+            color: selectedImage ? '#fff' : '#666',
+            border: selectedImage ? 'none' : '1px solid #e0e0e0',
+            borderRadius: 8,
+            width: 40,
+            height: 40,
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
             cursor: 'pointer',
-            marginRight: 8,
-            transition: 'all var(--transition)'
+            transition: 'all var(--transition)',
+            flexShrink: 0
           }}
           aria-label="Upload image"
+          title="Upload image"
         >
-          <CameraIcon style={{ width: 18, height: 18 }} />
+          <CameraIcon style={{ width: 20, height: 20 }} />
         </button>
         {selectedImage && (
           <div style={{
             position: 'relative',
-            marginRight: 8
+            flexShrink: 0
           }}>
             <img
               src={`data:${selectedImage.type};base64,${selectedImage.data}`}
               alt="Selected"
               style={{
-                width: 36,
-                height: 36,
+                width: 40,
+                height: 40,
                 borderRadius: 8,
-                objectFit: 'cover'
+                objectFit: 'cover',
+                border: '2px solid var(--accent)'
               }}
             />
             <button
               onClick={removeImage}
               style={{
                 position: 'absolute',
-                top: -4,
-                right: -4,
-                background: 'red',
+                top: -6,
+                right: -6,
+                background: '#ff4444',
                 color: '#fff',
-                border: 'none',
+                border: '2px solid #fff',
                 borderRadius: '50%',
-                width: 16,
-                height: 16,
-                fontSize: 10,
+                width: 18,
+                height: 18,
+                fontSize: 12,
                 cursor: 'pointer',
                 display: 'flex',
                 alignItems: 'center',
-                justifyContent: 'center'
+                justifyContent: 'center',
+                fontWeight: 'bold',
+                boxShadow: '0 2px 4px rgba(0,0,0,0.2)'
               }}
+              aria-label="Remove image"
             >
               ×
             </button>
@@ -482,29 +488,31 @@ export const Chatbot: React.FC = () => {
           disabled={isLoading}
           style={{
             flex: 1,
-            padding: '8px 12px',
+            padding: '10px 14px',
             borderRadius: 20,
-            border: '1px solid #ffd1a6',
+            border: '1px solid #e0e0e0',
             outline: 'none',
-            marginRight: 8,
             transition: 'all var(--transition)',
-            opacity: isLoading ? 0.5 : 1
+            opacity: isLoading ? 0.5 : 1,
+            fontSize: 14,
+            background: '#f8f8f8'
           }}
         />
         <button
           onClick={() => handleSend()}
           disabled={isLoading || (!input.trim() && !selectedImage)}
           style={{
-            background: 'var(--accent)',
+            background: isLoading || (!input.trim() && !selectedImage) ? '#ccc' : 'var(--accent)',
             color: '#fff',
             border: 'none',
             borderRadius: 20,
-            padding: '8px 16px',
+            padding: '10px 20px',
             fontWeight: 600,
-            marginRight: 8,
             cursor: isLoading || (!input.trim() && !selectedImage) ? 'not-allowed' : 'pointer',
             transition: 'all var(--transition)',
-            opacity: isLoading || (!input.trim() && !selectedImage) ? 0.5 : 1
+            opacity: isLoading || (!input.trim() && !selectedImage) ? 0.6 : 1,
+            fontSize: 14,
+            flexShrink: 0
           }}
         >
           Send
@@ -512,22 +520,23 @@ export const Chatbot: React.FC = () => {
         <button
           onClick={handleMicClick}
           style={{
-            background: listening ? '#ff8800' : '#fff',
-            color: listening ? '#fff' : 'var(--accent)',
-            border: '1.5px solid var(--accent)',
-            borderRadius: '50%',
-            width: 36,
-            height: 36,
+            background: listening ? 'var(--accent)' : '#f8f8f8',
+            color: listening ? '#fff' : '#666',
+            border: listening ? 'none' : '1px solid #e0e0e0',
+            borderRadius: 8,
+            width: 40,
+            height: 40,
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
-            fontWeight: 700,
             cursor: 'pointer',
-            transition: 'all var(--transition)'
+            transition: 'all var(--transition)',
+            flexShrink: 0
           }}
           aria-label="Voice input"
+          title="Voice input"
         >
-          <MicrophoneIcon style={{ width: 18, height: 18 }} />
+          <MicrophoneIcon style={{ width: 20, height: 20 }} />
         </button>
       </div>
       <style jsx>{`
