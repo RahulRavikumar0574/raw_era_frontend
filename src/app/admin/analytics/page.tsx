@@ -66,6 +66,13 @@ export default function AdminAnalyticsPage() {
 
   useEffect(() => {
     let active = true;
+    const iconMap: Record<string, any> = {
+      revenue: CurrencyRupeeIcon,
+      orders: ShoppingBagIcon,
+      customers: UserGroupIcon,
+      reviews: StarIcon
+    };
+
     const fetchAnalytics = async () => {
       setIsLoading(true);
       try {
@@ -80,7 +87,11 @@ export default function AdminAnalyticsPage() {
         
         const data = await response.json();
         if (active) {
-          setKpis(data.kpis || initialKpis);
+          const mappedKpis = (data.kpis || []).map((k: any) => ({
+            ...k,
+            icon: iconMap[k.id] || ChartBarIcon
+          }));
+          setKpis(mappedKpis.length > 0 ? mappedKpis : initialKpis);
         }
       } catch (error) {
         console.error('Error fetching analytics:', error);
