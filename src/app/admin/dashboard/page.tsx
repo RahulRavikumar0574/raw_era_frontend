@@ -16,6 +16,7 @@ import {
   XCircleIcon
 } from '@heroicons/react/24/outline';
 import { cn } from '@/lib/utils';
+import { useToast } from '@/hooks/useToast';
 
 interface KPI {
   id: string;
@@ -49,24 +50,14 @@ interface OrderStatus {
   icon: any;
 }
 
-export default function AdminDashboard() {
-  const [timeRange, setTimeRange] = useState('7d');
-  const [isLoading, setIsLoading] = useState(true);
-
-  useEffect(() => {
-    // Simulate loading
-    const timer = setTimeout(() => setIsLoading(false), 1000);
-    return () => clearTimeout(timer);
-  }, []);
-
-  const kpis: KPI[] = [
+const fallbackStats = {
+  kpis: [
     {
       id: 'revenue',
       title: 'Total Revenue',
       value: '₹2,45,680',
       change: 12.5,
-      changeType: 'increase',
-      icon: CurrencyDollarIcon,
+      changeType: 'increase' as const,
       color: 'green',
       description: 'vs last period'
     },
@@ -75,8 +66,7 @@ export default function AdminDashboard() {
       title: 'Total Orders',
       value: '1,247',
       change: 8.2,
-      changeType: 'increase',
-      icon: ShoppingBagIcon,
+      changeType: 'increase' as const,
       color: 'blue',
       description: 'vs last period'
     },
@@ -85,24 +75,21 @@ export default function AdminDashboard() {
       title: 'New Customers',
       value: '89',
       change: -3.1,
-      changeType: 'decrease',
-      icon: UsersIcon,
+      changeType: 'decrease' as const,
       color: 'purple',
       description: 'vs last period'
     },
     {
-      id: 'pageviews',
-      title: 'Page Views',
-      value: '12,456',
+      id: 'reviews',
+      title: 'Product Reviews',
+      value: '1,234',
       change: 15.8,
-      changeType: 'increase',
-      icon: EyeIcon,
+      changeType: 'increase' as const,
       color: 'orange',
       description: 'vs last period'
     }
-  ];
-
-  const salesData: ChartData[] = [
+  ],
+  salesData: [
     { name: 'Mon', value: 2400, color: '#f97316' },
     { name: 'Tue', value: 1398, color: '#f97316' },
     { name: 'Wed', value: 9800, color: '#f97316' },
@@ -110,71 +97,118 @@ export default function AdminDashboard() {
     { name: 'Fri', value: 4800, color: '#f97316' },
     { name: 'Sat', value: 3800, color: '#f97316' },
     { name: 'Sun', value: 4300, color: '#f97316' }
-  ];
-
-  const topProducts: TopProduct[] = [
+  ],
+  topProducts: [
     {
       id: '1',
       name: 'Oversized Graphic T-Shirt',
       sales: 156,
       revenue: 23400,
-      image: '/products/tshirt-1.jpg'
+      image: 'https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?auto=format&fit=crop&w=800&q=80'
     },
     {
       id: '2',
       name: 'Premium Denim Jacket',
       sales: 89,
       revenue: 22231,
-      image: '/products/jacket-1.jpg'
+      image: 'https://images.unsplash.com/photo-1551028719-00167b16eac5?auto=format&fit=crop&w=800&q=80'
     },
     {
       id: '3',
       name: 'Vintage Hoodie',
       sales: 67,
       revenue: 16750,
-      image: '/products/hoodie-1.jpg'
+      image: 'https://images.unsplash.com/photo-1556821840-3a63f95609a7?auto=format&fit=crop&w=800&q=80'
     },
     {
       id: '4',
       name: 'Floral Print Dress',
       sales: 45,
       revenue: 13455,
-      image: '/products/dress-1.jpg'
+      image: 'https://images.unsplash.com/photo-1572804013309-59a88b7e92f1?auto=format&fit=crop&w=800&q=80'
     }
-  ];
+  ],
+  orderStatuses: [
+    { status: 'Pending', count: 23, color: 'yellow' },
+    { status: 'Processing', count: 45, color: 'blue' },
+    { status: 'Shipped', count: 67, color: 'purple' },
+    { status: 'Delivered', count: 189, color: 'green' },
+    { status: 'Cancelled', count: 8, color: 'red' }
+  ]
+};
 
-  const orderStatuses: OrderStatus[] = [
-    {
-      status: 'Pending',
-      count: 23,
-      color: 'yellow',
-      icon: ClockIcon
-    },
-    {
-      status: 'Processing',
-      count: 45,
-      color: 'blue',
-      icon: ChartBarIcon
-    },
-    {
-      status: 'Shipped',
-      count: 67,
-      color: 'purple',
-      icon: TruckIcon
-    },
-    {
-      status: 'Delivered',
-      count: 189,
-      color: 'green',
-      icon: CheckCircleIcon
-    },
-    {
-      status: 'Cancelled',
-      count: 8,
-      color: 'red',
-      icon: XCircleIcon
-    }
-  ];
+export default function AdminDashboard() {
+  const [timeRange, setTimeRange] = useState('7d');
+  const [isLoading, setIsLoading] = useState(true);
+  const [stats, setStats] = useState<any>(null);
+  const toast = useToast();
+
+  useEffect(() => {
+    let active = true;
+    const fetchDashboardData = async () => {
+      setIsLoading(true);
+      try {
+        const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL || 'http://localhost:4001';
+        const response = await fetch(`${backendUrl}/analytics?timeRange=${timeRange}`, {
+          credentials: 'include'
+        });
+        
+        if (!response.ok) {
+          throw new Error('Failed to fetch dashboard data');
+        }
+        
+        const data = await response.json();
+        if (active) {
+          setStats(data);
+        }
+      } catch (error) {
+        console.error('Error fetching dashboard data:', error);
+        if (active) {
+          toast.error('Failed to load dashboard data');
+          setStats(fallbackStats);
+        }
+      } finally {
+        if (active) {
+          setIsLoading(false);
+        }
+      }
+    };
+    
+    fetchDashboardData();
+    return () => {
+      active = false;
+    };
+  }, [timeRange]);
+
+  const iconMap: Record<string, any> = {
+    revenue: CurrencyDollarIcon,
+    orders: ShoppingBagIcon,
+    customers: UsersIcon,
+    reviews: EyeIcon
+  };
+
+  const kpis: KPI[] = stats?.kpis?.map((k: any) => ({
+    ...k,
+    icon: iconMap[k.id] || ShoppingBagIcon
+  })) || [];
+
+  const salesData: ChartData[] = stats?.salesData || [];
+
+  const topProducts: TopProduct[] = stats?.topProducts || [];
+
+  const orderStatuses: OrderStatus[] = (stats?.orderStatuses || []).map((s: any) => {
+    const statusIconMap: Record<string, any> = {
+      Pending: ClockIcon,
+      Processing: ChartBarIcon,
+      Shipped: TruckIcon,
+      Delivered: CheckCircleIcon,
+      Cancelled: XCircleIcon
+    };
+    return {
+      ...s,
+      icon: statusIconMap[s.status] || ClockIcon
+    };
+  });
 
   if (isLoading) {
     return (

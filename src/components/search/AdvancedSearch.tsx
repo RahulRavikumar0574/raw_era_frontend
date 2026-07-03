@@ -121,12 +121,12 @@ export default function AdvancedSearch({
       });
 
       // Category suggestions
-      const categories = Array.from(new Set(mockProducts.map(p => p.category.name)))
+      const categories = Array.from(new Set(mockProducts.map(p => p.category?.name).filter(Boolean)))
         .filter(category => category.toLowerCase().includes(queryLower))
         .slice(0, 3);
 
       categories.forEach(category => {
-        const count = mockProducts.filter(p => p.category.name === category).length;
+        const count = mockProducts.filter(p => p.category?.name === category).length;
         newSuggestions.push({
           type: 'category',
           value: category,

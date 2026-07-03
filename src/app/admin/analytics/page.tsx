@@ -65,6 +65,7 @@ export default function AdminAnalyticsPage() {
   const toast = useToast();
 
   useEffect(() => {
+    let active = true;
     const fetchAnalytics = async () => {
       setIsLoading(true);
       try {
@@ -78,17 +79,27 @@ export default function AdminAnalyticsPage() {
         }
         
         const data = await response.json();
-        setKpis(data.kpis || initialKpis);
+        if (active) {
+          setKpis(data.kpis || initialKpis);
+        }
       } catch (error) {
         console.error('Error fetching analytics:', error);
-        toast.error('Failed to load analytics data');
+        if (active) {
+          toast.error('Failed to load analytics data');
+          setKpis(initialKpis);
+        }
       } finally {
-        setIsLoading(false);
+        if (active) {
+          setIsLoading(false);
+        }
       }
     };
     
     fetchAnalytics();
-  }, [timeRange, toast]);
+    return () => {
+      active = false;
+    };
+  }, [timeRange]);
 
   return (
     <div className="min-h-screen bg-gray-50 p-6">

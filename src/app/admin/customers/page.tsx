@@ -19,7 +19,7 @@ import {
 } from '@heroicons/react/24/outline';
 import { cn } from '@/lib/utils';
 import { useToast } from '@/hooks/useToast';
-import { type AdminCustomer } from '@/data/adminMockData';
+import { type AdminCustomer, adminCustomers } from '@/data/adminMockData';
 import { useAuthStore } from '@/store';
 
 interface Customer extends AdminCustomer {
@@ -158,13 +158,16 @@ export default function AdminCustomersPage() {
       } catch (error) {
         console.error('Error fetching customers:', error);
         toast.error('Failed to load customer data');
+        const fallback = adminCustomers.map(convertToCustomer);
+        setCustomers(fallback);
+        setFilteredCustomers(fallback);
       } finally {
         setIsLoadingData(false);
       }
     };
     
     fetchCustomers();
-  }, [toast]);
+  }, []);
 
   useEffect(() => {
     filterCustomers();

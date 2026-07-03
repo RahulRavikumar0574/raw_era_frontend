@@ -126,6 +126,23 @@ export default function CreateProductPage() {
 
   const addProduct = useProductStore(state => state.addProduct);
 
+  const getCategoryById = (id: string) => {
+    const mapping: Record<string, { name: string; slug: string }> = {
+      '1': { name: "Men's Clothing", slug: 'mens' },
+      '2': { name: "Women's Clothing", slug: 'womens' },
+      '3': { name: "Kids Clothing", slug: 'kids' },
+      '4': { name: 'Accessories', slug: 'accessories' }
+    };
+    const categoryInfo = mapping[id] || { name: 'Uncategorized', slug: 'uncategorized' };
+    return {
+      id,
+      name: categoryInfo.name,
+      slug: categoryInfo.slug,
+      isActive: true,
+      order: parseInt(id) || 5
+    };
+  };
+
   const onSubmit = async (data: ProductFormData) => {
     setIsSubmitting(true);
     try {
@@ -134,9 +151,12 @@ export default function CreateProductPage() {
         ? Math.round(((data.originalPrice - data.price) / data.originalPrice) * 100)
         : undefined;
 
+      const category = getCategoryById(data.categoryId);
+
       const productData = {
         id: uuidv4(), // Generate unique ID for the product
         ...data,
+        category,
         discount,
         images: imagePreviews.map((url, index) => ({
           id: `img-${uuidv4()}`,

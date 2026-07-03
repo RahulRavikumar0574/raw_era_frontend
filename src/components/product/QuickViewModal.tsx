@@ -334,7 +334,7 @@ export default function QuickViewModal({ product, isOpen, onClose }: QuickViewMo
                           </div>
                           <div>
                             <span className="text-gray-500">Category:</span>
-                            <span className="ml-2 font-medium">{product.category.name}</span>
+                            <span className="ml-2 font-medium">{product.category?.name || 'Uncategorized'}</span>
                           </div>
                           <div>
                             <span className="text-gray-500">SKU:</span>

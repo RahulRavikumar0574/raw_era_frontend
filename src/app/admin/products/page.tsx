@@ -51,7 +51,7 @@ export default function AdminProductsPage() {
     }
 
     if (selectedCategory !== 'all') {
-      filtered = filtered.filter(product => product.category.slug === selectedCategory);
+      filtered = filtered.filter(product => product.category?.slug === selectedCategory);
     }
 
     if (selectedStatus !== 'all') {
@@ -231,7 +231,7 @@ export default function AdminProductsPage() {
                       <td className="py-4 px-6">
                         <span className="inline-flex items-center gap-1 px-2 py-1 bg-blue-100 text-blue-800 text-xs rounded-full">
                           <TagIcon className="w-3 h-3" />
-                          {product.category.name}
+                          {product.category?.name || 'Uncategorized'}
                         </span>
                       </td>
                       <td className="py-4 px-6">
@@ -411,7 +411,7 @@ export default function AdminProductsPage() {
                     </div>
                     <div>
                       <p className="text-sm text-gray-500">Category</p>
-                      <p className="font-semibold">{selectedProduct.category.name}</p>
+                      <p className="font-semibold">{selectedProduct.category?.name || 'Uncategorized'}</p>
                     </div>
                     <div>
                       <p className="text-sm text-gray-500">Stock</p>

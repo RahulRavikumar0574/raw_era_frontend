@@ -26,6 +26,41 @@ interface Coupon {
   validUntil: string;
 }
 
+const mockCoupons: Coupon[] = [
+  {
+    id: '1',
+    code: 'SUMMER50',
+    name: 'Summer Super Sale',
+    type: 'percentage',
+    value: 50,
+    usedCount: 120,
+    usageLimit: 500,
+    isActive: true,
+    validUntil: '2026-08-31'
+  },
+  {
+    id: '2',
+    code: 'FREESHIP',
+    name: 'Free Delivery Offer',
+    type: 'free_shipping',
+    value: 0,
+    usedCount: 450,
+    isActive: true,
+    validUntil: '2026-12-31'
+  },
+  {
+    id: '3',
+    code: 'RAW200',
+    name: 'Flat Discount',
+    type: 'fixed_amount',
+    value: 200,
+    usedCount: 85,
+    usageLimit: 200,
+    isActive: false,
+    validUntil: '2026-06-30'
+  }
+];
+
 export default function AdminMarketingPage() {
   const [activeTab, setActiveTab] = useState<'coupons' | 'campaigns' | 'seo'>('coupons');
   const [coupons, setCoupons] = useState<Coupon[]>([]);
@@ -45,33 +80,57 @@ export default function AdminMarketingPage() {
   
   // Fetch real coupon data from backend
   useEffect(() => {
+    let active = true;
     const fetchCoupons = async () => {
       setIsLoading(true);
       try {
         const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL || 'http://localhost:4001';
-        const response = await fetch(`${backendUrl}/coupon`, {
+        let response = await fetch(`${backendUrl}/coupons/admin`, {
           credentials: 'include'
         });
+        
+        if (!response.ok) {
+          // Fallback to active public coupons list if unauthorized
+          response = await fetch(`${backendUrl}/coupons`, {
+            credentials: 'include'
+          });
+        }
         
         if (!response.ok) {
           throw new Error('Failed to fetch coupons');
         }
         
         const data = await response.json();
-        setCoupons(data);
+        const mappedCoupons = (data.coupons || []).map((c: any) => ({
+          ...c,
+          type: c.type?.toLowerCase() || 'percentage',
+          isActive: c.isActive ?? true,
+          usedCount: c.usedCount ?? 0,
+          usageLimit: c.usageLimit ?? undefined,
+        }));
+        if (active) {
+          setCoupons(mappedCoupons);
+        }
       } catch (error) {
         console.error('Error fetching coupons:', error);
-        toast.error('Failed to load coupon data');
-        setCoupons([]);
+        if (active) {
+          toast.error('Failed to load coupon data');
+          setCoupons(mockCoupons);
+        }
       } finally {
-        setIsLoading(false);
+        if (active) {
+          setIsLoading(false);
+        }
       }
     };
     
     if (activeTab === 'coupons') {
       fetchCoupons();
     }
-  }, [activeTab, toast]);
+    return () => {
+      active = false;
+    };
+  }, [activeTab]);
 
   const getCouponTypeColor = (type: string) => {
     const colors = {
