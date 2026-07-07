@@ -9,12 +9,42 @@ import {
   ShieldCheckIcon
 } from '@heroicons/react/24/outline';
 
+function ContactDetails() {
+  return (
+    <div className="space-y-2">
+      <a href="tel:+919946812233" className="flex items-center gap-2 text-sm text-gray-400 hover:text-orange-500 transition-colors">
+        <PhoneIcon className="w-4 h-4 text-orange-500 flex-shrink-0" />
+        <span>+91 99468 12233</span>
+      </a>
+      <a href="mailto:Info@rawera.com" className="flex items-center gap-2 text-sm text-gray-400 hover:text-orange-500 transition-colors">
+        <EnvelopeIcon className="w-4 h-4 text-orange-500 flex-shrink-0" />
+        <span>Info@rawera.com</span>
+      </a>
+      <a
+        href="https://www.instagram.com/the.rawera?igsh=YzA5dzA0dndjOTJ2"
+        target="_blank"
+        rel="noopener noreferrer"
+        className="flex items-center gap-2 text-sm text-gray-400 hover:text-orange-500 transition-colors"
+      >
+        <svg className="w-4 h-4 text-orange-500 flex-shrink-0" fill="currentColor" viewBox="0 0 24 24">
+          <path d="M7.75 2h8.5A5.75 5.75 0 0 1 22 7.75v8.5A5.75 5.75 0 0 1 16.25 22h-8.5A5.75 5.75 0 0 1 2 16.25v-8.5A5.75 5.75 0 0 1 7.75 2zm0 1.5A4.25 4.25 0 0 0 3.5 7.75v8.5A4.25 4.25 0 0 0 7.75 20.5h8.5A4.25 4.25 0 0 0 20.5 16.25v-8.5A4.25 4.25 0 0 0 16.25 3.5zm4.25 3.25a5.25 5.25 0 1 1 0 10.5a5.25 5.25 0 0 1 0-10.5zm0 1.5a3.75 3.75 0 1 0 0 7.5a3.75 3.75 0 0 0 0-7.5zm5.25.75a1 1 0 1 1-2 0a1 1 0 0 1 2 0z" />
+        </svg>
+        <span>@the.rawera</span>
+      </a>
+      <div className="flex items-center gap-2 text-sm text-gray-400">
+        <MapPinIcon className="w-4 h-4 text-orange-500 flex-shrink-0" />
+        <span>Mumbai, Maharashtra, India</span>
+      </div>
+    </div>
+  );
+}
+
 export default function Footer() {
   return (
     <footer className="bg-gray-900 text-gray-300 pt-12 pb-6 mt-12">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Top Section */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-8 pb-8 border-b border-gray-800">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-8 mb-8 pb-8 border-b border-gray-800">
           {/* About Section */}
           <div>
             <div className="flex items-center space-x-2 mb-4">
@@ -26,24 +56,6 @@ export default function Footer() {
             <p className="text-sm text-gray-400 mb-4">
               Your destination for premium quality fashion. Discover trendy clothing for men, women, and kids.
             </p>
-            <div className="space-y-2">
-              <a href="tel:+919946812233" className="flex items-center gap-2 text-sm text-gray-400 hover:text-orange-500 transition-colors">
-                <PhoneIcon className="w-4 h-4 text-orange-500" />
-                <span>+91 99468 12233</span>
-              </a>
-              <a href="mailto:Info@rawera.com" className="flex items-center gap-2 text-sm text-gray-400 hover:text-orange-500 transition-colors">
-                <EnvelopeIcon className="w-4 h-4 text-orange-500" />
-                <span>Info@rawera.com</span>
-              </a>
-              <a href="https://www.instagram.com/the.rawera?igsh=YzA5dzA0dndjOTJ2" target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 text-sm text-gray-400 hover:text-orange-500 transition-colors">
-                <svg className="w-4 h-4 text-orange-500" fill="currentColor" viewBox="0 0 24 24"><path d="M7.75 2h8.5A5.75 5.75 0 0 1 22 7.75v8.5A5.75 5.75 0 0 1 16.25 22h-8.5A5.75 5.75 0 0 1 2 16.25v-8.5A5.75 5.75 0 0 1 7.75 2zm0 1.5A4.25 4.25 0 0 0 3.5 7.75v8.5A4.25 4.25 0 0 0 7.75 20.5h8.5A4.25 4.25 0 0 0 20.5 16.25v-8.5A4.25 4.25 0 0 0 16.25 3.5zm4.25 3.25a5.25 5.25 0 1 1 0 10.5a5.25 5.25 0 0 1 0-10.5zm0 1.5a3.75 3.75 0 1 0 0 7.5a3.75 3.75 0 0 0 0-7.5zm5.25.75a1 1 0 1 1-2 0a1 1 0 0 1 2 0z" /></svg>
-                <span>@the.rawera</span>
-              </a>
-              <div className="flex items-center gap-2 text-sm">
-                <MapPinIcon className="w-4 h-4 text-orange-500" />
-                <span>Mumbai, Maharashtra, India</span>
-              </div>
-            </div>
           </div>
 
           {/* Quick Links */}
@@ -56,7 +68,6 @@ export default function Footer() {
               <li><Link href="/track-order" className="text-sm hover:text-orange-500 transition-colors">Track Order</Link></li>
               <li><Link href="/orders" className="text-sm hover:text-orange-500 transition-colors">My Orders</Link></li>
               <li><Link href="/wishlist" className="text-sm hover:text-orange-500 transition-colors">Wishlist</Link></li>
-              <li><Link href="/feedback" className="text-sm hover:text-orange-500 transition-colors">Contact Us</Link></li>
             </ul>
           </div>
 
@@ -71,7 +82,14 @@ export default function Footer() {
               <li><Link href="/faq" className="text-sm hover:text-orange-500 transition-colors">FAQs</Link></li>
               <li><Link href="/size-guide" className="text-sm hover:text-orange-500 transition-colors">Size Guide</Link></li>
               <li><Link href="/privacy" className="text-sm hover:text-orange-500 transition-colors">Privacy Policy</Link></li>
+              <li><Link href="/feedback" className="text-sm hover:text-orange-500 transition-colors">Contact Us</Link></li>
             </ul>
+          </div>
+
+          {/* Contact */}
+          <div>
+            <h3 className="text-white font-bold text-lg mb-4">Contact</h3>
+            <ContactDetails />
           </div>
 
           {/* Newsletter */}

@@ -11,6 +11,7 @@ import {
 import { SearchFilters, SortOption } from '@/types';
 import { useSearchStore } from '@/store';
 import { cn } from '@/lib/utils';
+import PriceRangeSlider from './PriceRangeSlider';
 
 interface ProductFiltersProps {
   onFiltersChange: (filters: SearchFilters) => void;
@@ -241,22 +242,12 @@ function FilterContent({
               exit={{ height: 0, opacity: 0 }}
               className="space-y-3"
             >
-              <div className="px-3">
-                <input
-                  type="range"
+              <div className="px-1">
+                <PriceRangeSlider
                   min={priceRange[0]}
                   max={priceRange[1]}
-                  value={localPriceRange[0]}
-                  onChange={(e) => onPriceRangeChange([parseInt(e.target.value), localPriceRange[1]])}
-                  className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer slider"
-                />
-                <input
-                  type="range"
-                  min={priceRange[0]}
-                  max={priceRange[1]}
-                  value={localPriceRange[1]}
-                  onChange={(e) => onPriceRangeChange([localPriceRange[0], parseInt(e.target.value)])}
-                  className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer slider mt-2"
+                  value={localPriceRange}
+                  onChange={onPriceRangeChange}
                 />
               </div>
               <div className="flex items-center justify-between text-sm text-gray-600">

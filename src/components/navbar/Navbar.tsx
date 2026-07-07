@@ -8,7 +8,8 @@ import {
   ArrowRightOnRectangleIcon,
   ClipboardDocumentListIcon,
   ChatBubbleLeftRightIcon,
-  ArrowsUpDownIcon
+  ArrowsUpDownIcon,
+  ShoppingBagIcon
 } from '@heroicons/react/24/outline';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
@@ -97,19 +98,7 @@ export default function NavbarTop({ onHamburgerClick }: { onHamburgerClick?: () 
   }, []);
   return (
     <nav className="bg-white border-b border-gray-200 sticky top-0 z-50 w-full">
-      {/* Top Bar */}
-      <div className="bg-gray-900 text-white py-2">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex justify-between items-center text-sm">
-          <div className="flex items-center gap-4">
-            <a href="tel:+919946812233" className="hover:text-orange-400 transition-colors">📞 +91 99468 12233</a>
-            <a href="mailto:Info@rawera.com" className="hidden md:inline hover:text-orange-400 transition-colors">✉️ Info@rawera.com</a>
-          </div>
-          <div className="flex items-center gap-4">
-            <Link href="/track-order" className="hover:text-orange-400 transition-colors">Track Order</Link>
-            <Link href="/bulk-order" className="hover:text-orange-400 transition-colors">Bulk Orders</Link>
-          </div>
-        </div>
-      </div>
+
       
       {/* Main Navbar */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -303,16 +292,19 @@ export default function NavbarTop({ onHamburgerClick }: { onHamburgerClick?: () 
 
             {/* Navigation Links */}
             <div className="space-y-1">
-              {navLinks.map((link) => (
-                <Link
-                  key={link.label}
-                  href={link.href}
-                  onClick={() => setIsMobileMenuOpen(false)}
-                  className="block px-4 py-3 text-gray-700 hover:bg-orange-50 hover:text-orange-600 rounded-lg font-medium transition-colors"
-                >
-                  {link.label}
-                </Link>
-              ))}
+              {navLinks
+                .filter((link) => link.label !== 'Bulk Orders')
+                .map((link) => (
+                  <Link
+                    key={link.label}
+                    href={link.href}
+                    onClick={() => setIsMobileMenuOpen(false)}
+                    className="block px-4 py-3 text-gray-700 hover:bg-orange-50 hover:text-orange-600 rounded-lg font-medium transition-colors"
+                  >
+                    {link.label}
+                  </Link>
+                ))
+              }
             </div>
 
             {/* Divider */}
@@ -320,6 +312,14 @@ export default function NavbarTop({ onHamburgerClick }: { onHamburgerClick?: () 
 
             {/* Quick Links */}
             <div className="space-y-1">
+              <Link
+                href="/bulk-order"
+                onClick={() => setIsMobileMenuOpen(false)}
+                className="flex items-center gap-3 px-4 py-3 text-gray-700 hover:bg-orange-50 hover:text-orange-600 rounded-lg transition-colors"
+              >
+                <ShoppingBagIcon className="w-5 h-5" />
+                <span className="font-medium">Bulk Orders</span>
+              </Link>
               <Link
                 href="/track-order"
                 onClick={() => setIsMobileMenuOpen(false)}

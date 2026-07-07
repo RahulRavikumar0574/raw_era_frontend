@@ -25,26 +25,26 @@ const categories: CategorySection[] = [
   {
     title: 'CATEGORY',
     items: [
-      { name: 'MENS', href: '/products?category=mens', icon: UserGroupIcon },
-      { name: 'WOMENS', href: '/products?category=womens', icon: UserGroupIcon },
-      { name: 'KIDS', href: '/products?category=kids', icon: UserGroupIcon },
+      { name: 'Men', href: '/products?category=mens', icon: UserGroupIcon },
+      { name: 'Women', href: '/products?category=womens', icon: UserGroupIcon },
+      { name: 'Kids', href: '/products?category=kids', icon: UserGroupIcon },
     ]
   },
   {
     title: 'MAIN CATEGORY',
     items: [
-      { name: 'INFLUENCERS', href: '/products?main_category=influencers', icon: StarIcon },
-      { name: 'ARTISTS', href: '/products?main_category=artists', icon: SparklesIcon },
-      { name: 'MOVIES', href: '/products?main_category=movies', icon: FilmIcon },
-      { name: 'THE RAW ERA (OG PRODUCTS)', href: '/products?main_category=raw-era', icon: SparklesIcon },
+      { name: 'Influencers', href: '/products?main_category=influencers', icon: StarIcon },
+      { name: 'Artists', href: '/products?main_category=artists', icon: SparklesIcon },
+      { name: 'Movies', href: '/products?main_category=movies', icon: FilmIcon },
+      { name: 'The Raw Era (OG Products)', href: '/products?main_category=raw-era', icon: SparklesIcon },
     ]
   },
   {
     title: 'PRODUCTS',
     items: [
-      { name: 'OVERSIZED TEE', href: '/products?product_type=oversized-tee' },
-      { name: 'SHIRTS', href: '/products?product_type=shirts' },
-      { name: 'CROP SHIRTS', href: '/products?product_type=crop-shirts' },
+      { name: 'Oversized Tee', href: '/products?product_type=oversized-tee' },
+      { name: 'Shirts', href: '/products?product_type=shirts' },
+      { name: 'Crop Shirts', href: '/products?product_type=crop-shirts' },
     ]
   }
 ];

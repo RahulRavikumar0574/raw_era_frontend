@@ -29,9 +29,9 @@ export default function HomePage() {
             <div>
               <div className="font-bold mb-2 text-gray-800 text-md tracking-wide uppercase">CATEGORY</div>
               <ul className="mb-4 pl-2 space-y-1">
-                <li><Link href="/categories/mens" className="text-gray-800 hover:text-blue-600 font-medium transition-colors">MENS</Link></li>
-                <li><Link href="/categories/womens" className="text-gray-800 hover:text-blue-600 font-medium transition-colors">WOMENS</Link></li>
-                <li><Link href="/categories/kids" className="text-gray-800 hover:text-blue-600 font-medium transition-colors">KIDS</Link></li>
+                <li><Link href="/products?category=mens" className="text-gray-800 hover:text-blue-600 font-medium transition-colors">Men</Link></li>
+                <li><Link href="/products?category=womens" className="text-gray-800 hover:text-blue-600 font-medium transition-colors">Women</Link></li>
+                <li><Link href="/products?category=kids" className="text-gray-800 hover:text-blue-600 font-medium transition-colors">Kids</Link></li>
               </ul>
               <div className="font-bold mb-2 text-gray-800 text-md tracking-wide uppercase">MAIN CATEGORY</div>
               <ul className="mb-4 pl-2 space-y-1">
@@ -92,6 +92,29 @@ export default function HomePage() {
         </Carousel>
       </div>
 
+      {/* Categories Section */}
+      <div className="py-16 bg-white">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-12">
+            <h2 className="text-3xl font-bold text-gray-900 mb-4">Shop by Category</h2>
+            <p className="text-gray-600">Explore our diverse collection</p>
+          </div>
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
+            {[{name: 'Men', href: '/products?category=mens', img: 'https://images.unsplash.com/photo-1516257984-b1b4d707412e?auto=format&fit=crop&w=400&q=80'},
+              {name: 'Women', href: '/products?category=womens', img: 'https://images.unsplash.com/photo-1487412720507-e7ab37603c6f?auto=format&fit=crop&w=400&q=80'},
+              {name: 'Kids', href: '/products?category=kids', img: 'https://images.unsplash.com/photo-1503944583220-79d8926ad5e2?auto=format&fit=crop&w=400&q=80'},
+              {name: 'Accessories', href: '/products?category=accessories', img: 'https://images.unsplash.com/photo-1523779917675-b6ed3a42a561?auto=format&fit=crop&w=400&q=80'}].map((cat, i) => (
+              <Link key={cat.name} href={cat.href} className="group relative overflow-hidden rounded-lg aspect-square">
+                <img src={cat.img} alt={cat.name} className="object-cover w-full h-full group-hover:scale-110 transition-transform duration-500" />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent flex items-end p-4">
+                  <h3 className="text-white font-semibold text-xl">{cat.name}</h3>
+                </div>
+              </Link>
+            ))}
+          </div>
+        </div>
+      </div>
+
       {/* Features Section */}
       <div className="bg-gray-50 py-12">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -123,29 +146,6 @@ export default function HomePage() {
                 <p className="text-gray-600 text-sm">Curated collections</p>
               </div>
             </motion.div>
-          </div>
-        </div>
-      </div>
-
-      {/* Categories Section */}
-      <div className="py-16 bg-white">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl font-bold text-gray-900 mb-4">Shop by Category</h2>
-            <p className="text-gray-600">Explore our diverse collection</p>
-          </div>
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
-            {[{name: 'Men', href: '/products?category=mens', img: 'https://images.unsplash.com/photo-1516257984-b1b4d707412e?auto=format&fit=crop&w=400&q=80'},
-              {name: 'Women', href: '/products?category=womens', img: 'https://images.unsplash.com/photo-1487412720507-e7ab37603c6f?auto=format&fit=crop&w=400&q=80'},
-              {name: 'Kids', href: '/products?category=kids', img: 'https://images.unsplash.com/photo-1503944583220-79d8926ad5e2?auto=format&fit=crop&w=400&q=80'},
-              {name: 'Accessories', href: '/products?category=accessories', img: 'https://images.unsplash.com/photo-1523779917675-b6ed3a42a561?auto=format&fit=crop&w=400&q=80'}].map((cat, i) => (
-              <Link key={cat.name} href={cat.href} className="group relative overflow-hidden rounded-lg aspect-square">
-                <img src={cat.img} alt={cat.name} className="object-cover w-full h-full group-hover:scale-110 transition-transform duration-500" />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent flex items-end p-4">
-                  <h3 className="text-white font-semibold text-xl">{cat.name}</h3>
-                </div>
-              </Link>
-            ))}
           </div>
         </div>
       </div>

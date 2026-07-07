@@ -59,7 +59,11 @@ function ProductsPageContent() {
   const currentCategoryName = useMemo(() => {
     if (!currentCategory) return null;
     const found = categories.find(c => c.slug === currentCategory);
-    return found?.name ?? currentCategory;
+    const name = found?.name ?? currentCategory;
+    if (name.toLowerCase() === 'mens') return 'Men';
+    if (name.toLowerCase() === 'womens') return 'Women';
+    if (name.toLowerCase() === 'kids') return 'Kids';
+    return name.charAt(0).toUpperCase() + name.slice(1);
   }, [currentCategory, categories]);
 
 
@@ -138,7 +142,7 @@ function ProductsPageContent() {
           <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
             <div>
               <h1 className="text-3xl font-bold text-gray-900">
-                {currentCategoryName 
+                {currentCategoryName
                   ? `${currentCategoryName} Products`
                   : 'All Products'
                 }
@@ -184,23 +188,30 @@ function ProductsPageContent() {
             >
               All Products
             </button>
-            {categories.map((cat) => (
-              <button
-                key={cat.slug}
-                onClick={() => {
-                  setCurrentCategory(cat.slug);
-                  updateFilters({ category: cat.slug });
-                }}
-                className={cn(
-                  'px-4 py-2 rounded-lg font-medium whitespace-nowrap transition-colors',
-                  currentCategory === cat.slug
-                    ? 'bg-orange-600 text-white'
-                    : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
-                )}
-              >
-                {cat.name}
-              </button>
-            ))}
+            {categories.map((cat) => {
+              const displayName = 
+                cat.slug === 'mens' ? 'Men' :
+                cat.slug === 'womens' ? 'Women' :
+                cat.slug === 'kids' ? 'Kids' :
+                cat.name;
+              return (
+                <button
+                  key={cat.slug}
+                  onClick={() => {
+                    setCurrentCategory(cat.slug);
+                    updateFilters({ category: cat.slug });
+                  }}
+                  className={cn(
+                    'px-4 py-2 rounded-lg font-medium whitespace-nowrap transition-colors',
+                    currentCategory === cat.slug
+                      ? 'bg-orange-600 text-white'
+                      : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                  )}
+                >
+                  {displayName}
+                </button>
+              );
+            })}
           </div>
         </div>
       </div>
