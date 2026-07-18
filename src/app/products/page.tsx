@@ -45,7 +45,7 @@ function ProductsPageContent() {
   // Load categories for tabs
   useEffect(() => {
     const controller = new AbortController();
-    const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL || 'http://localhost:4001';
+    const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL || 'http://localhost:4000';
     fetch(`${backendUrl}/categories`, { signal: controller.signal })
       .then(async (r) => {
         if (!r.ok) throw new Error('Failed to load categories');

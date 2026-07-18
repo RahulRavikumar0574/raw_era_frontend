@@ -28,7 +28,7 @@ export default function SizeSelector({
   const [hoveredVariant, setHoveredVariant] = useState<string | null>(null);
   const [showGuide, setShowGuide] = useState(false);
 
-  const sizeVariants = variants.filter(variant => variant.type === 'size');
+  const sizeVariants = variants?.filter(variant => variant.type?.toLowerCase() === 'size') || [];
 
   if (sizeVariants.length === 0) return null;
 

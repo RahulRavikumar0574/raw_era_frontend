@@ -84,7 +84,7 @@ export default function AdminMarketingPage() {
     const fetchCoupons = async () => {
       setIsLoading(true);
       try {
-        const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL || 'http://localhost:4001';
+        const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL || 'http://localhost:4000';
         let response = await fetch(`${backendUrl}/coupons/admin`, {
           credentials: 'include'
         });

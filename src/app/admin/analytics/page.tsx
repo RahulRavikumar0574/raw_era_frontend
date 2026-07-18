@@ -76,7 +76,7 @@ export default function AdminAnalyticsPage() {
     const fetchAnalytics = async () => {
       setIsLoading(true);
       try {
-        const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL || 'http://localhost:4001';
+        const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL || 'http://localhost:4000';
         const response = await fetch(`${backendUrl}/analytics?timeRange=${timeRange}`, {
           credentials: 'include'
         });

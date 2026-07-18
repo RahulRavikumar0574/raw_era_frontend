@@ -70,7 +70,7 @@ export const useCartStore = create<CartState>()(
       cart: initialCart,
       isLoading: false,
       addItem: async (product, variantId, quantity = 1) => {
-        const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL || 'http://localhost:4001';
+        const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL || 'http://localhost:4000';
         try {
           const response = await fetch(`${backendUrl}/cart`, {
             method: 'POST',
@@ -120,7 +120,7 @@ export const useCartStore = create<CartState>()(
         const { cart } = get();
         const target = cart.items.find(i => i.id === itemId);
         if (!target) return;
-        const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL || 'http://localhost:4001';
+        const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL || 'http://localhost:4000';
         await fetch(`${backendUrl}/cart`, {
           method: 'DELETE',
           headers: { 'Content-Type': 'application/json' },

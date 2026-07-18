@@ -56,7 +56,7 @@ export default function NavbarTop({ onHamburgerClick }: { onHamburgerClick?: () 
   };
 
   const handleLogout = async () => {
-    const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL || 'http://localhost:4001';
+    const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL || 'http://localhost:4000';
     await fetch(`${backendUrl}/auth/logout`, { method: 'POST', credentials: 'include' });
     logout();
     setIsUserMenuOpen(false);
@@ -67,10 +67,38 @@ export default function NavbarTop({ onHamburgerClick }: { onHamburgerClick?: () 
   // Close menus when clicking outside
   useEffect(() => {
     // Hydrate user from backend
-    const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL || 'http://localhost:4001';
+    const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL || 'http://localhost:4000';
+    
+    const attemptRefresh = () => {
+      fetch(`${backendUrl}/auth/refresh`, { method: 'POST', credentials: 'include' })
+        .then(async (r) => {
+          if (!r.ok) {
+            logout();
+            return;
+          }
+          const data = await r.json();
+          const u = data.user;
+          if (u) {
+            login({
+              id: u.id,
+              email: u.email,
+              firstName: u.firstName || 'User',
+              lastName: u.lastName || '',
+              avatar: u.avatarUrl || undefined,
+            } as any);
+          }
+        })
+        .catch(() => {
+          logout();
+        });
+    };
+
     fetch(`${backendUrl}/auth/me`, { credentials: 'include' })
       .then(async (r) => {
-        if (!r.ok) return;
+        if (!r.ok) {
+          attemptRefresh();
+          return;
+        }
         const data = await r.json();
         const u = data.user;
         if (u) {

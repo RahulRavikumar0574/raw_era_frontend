@@ -18,7 +18,7 @@ const QUICK_REPLIES = [
 ];
 
 const STORAGE_KEY = 'chatbot_history';
-const API_URL = process.env.NEXT_PUBLIC_API_URL ?? 'http://localhost:4001';
+const API_URL = process.env.NEXT_PUBLIC_API_URL ?? 'http://localhost:4000';
 
 export const Chatbot: React.FC = () => {
   const [messages, setMessages] = useState<ChatMessage[]>([]);

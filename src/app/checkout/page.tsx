@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { motion } from 'framer-motion';
+import Script from 'next/script';
 import {
   CreditCardIcon,
   TruckIcon,
@@ -9,17 +10,26 @@ import {
   CheckCircleIcon,
   LockClosedIcon
 } from '@heroicons/react/24/outline';
-import { useCartStore } from '@/store';
+import { useCartStore, useAuthStore } from '@/store';
 import { useToast } from '@/hooks/useToast';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
+import { useEffect } from 'react';
 
 export default function CheckoutPage() {
   const router = useRouter();
   const toast = useToast();
   const { cart, clearCart } = useCartStore();
+  const { isAuthenticated } = useAuthStore();
   const [isProcessing, setIsProcessing] = useState(false);
   const [step, setStep] = useState(1);
+
+  useEffect(() => {
+    if (!isAuthenticated) {
+      toast.info('Authentication Required', 'Please log in to proceed to checkout');
+      router.push('/auth/login');
+    }
+  }, [isAuthenticated, router, toast]);
 
   const [formData, setFormData] = useState({
     // Shipping
@@ -33,7 +43,7 @@ export default function CheckoutPage() {
     state: '',
     pincode: '',
     // Payment
-    paymentMethod: 'card',
+    paymentMethod: 'razorpay',
     cardNumber: '',
     cardName: '',
     expiryDate: '',
@@ -50,23 +60,123 @@ export default function CheckoutPage() {
       return;
     }
 
-    if (formData.paymentMethod === 'card') {
+
+    if (formData.paymentMethod === 'razorpay') {
       try {
         setIsProcessing(true);
         const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL || 'http://localhost:4000';
-        const res = await fetch(`${backendUrl}/payments/stripe/create-intent`, {
+        
+        // 1. Create order in DB via backend
+        const orderPayload = {
+          items: cart.items.map((i) => ({
+            productId: i.product.id,
+            quantity: i.quantity,
+            price: i.price,
+            variantId: i.variantId,
+          })),
+          shippingAddress: {
+            email: formData.email,
+            firstName: formData.firstName,
+            lastName: formData.lastName,
+            phone: formData.phone,
+            address1: formData.address,
+            address2: formData.apartment,
+            city: formData.city,
+            state: formData.state,
+            postalCode: formData.pincode,
+            country: 'India',
+          },
+          totals: {
+            subtotal: cart.subtotal,
+            tax: cart.tax,
+            shipping: cart.shipping,
+            discount: cart.discount,
+            total: cart.total,
+          },
+          paymentMethod: 'RAZORPAY',
+          paymentStatus: 'PENDING',
+        };
+
+        const dbOrderRes = await fetch(`${backendUrl}/orders`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           credentials: 'include',
-          body: JSON.stringify({ amountInPaise: Math.round(cart.total * 100), currency: 'inr' }),
+          body: JSON.stringify(orderPayload),
         });
-        if (!res.ok) throw new Error('Failed to create payment');
-        const data = await res.json();
-        // For now, just confirm creation; full Stripe Elements integration can be added next
-        toast.success('Payment Intent Created', 'Complete payment in the next step');
-        // Simulate order placement after payment intent in test mode
-        clearCart();
-        router.push('/orders');
+
+        if (!dbOrderRes.ok) throw new Error('Failed to create order in database');
+        const dbOrderData = await dbOrderRes.json();
+        const dbOrder = dbOrderData.order;
+
+        // 2. Create Razorpay order
+        const rzpOrderRes = await fetch(`${backendUrl}/payments/create-order`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          credentials: 'include',
+          body: JSON.stringify({
+            amountInPaise: Math.round(dbOrder.total * 100),
+            currency: 'INR',
+            receipt: dbOrder.orderNumber,
+          }),
+        });
+
+        if (!rzpOrderRes.ok) throw new Error('Failed to create Razorpay order');
+        const rzpOrderData = await rzpOrderRes.json();
+        const rzpOrder = rzpOrderData.order;
+        const keyId = rzpOrderData.keyId;
+
+        // 3. Open Razorpay checkout modal
+        if (!(window as any).Razorpay) {
+          throw new Error('Razorpay SDK failed to load. Please try again.');
+        }
+
+        const options = {
+          key: keyId,
+          amount: rzpOrder.amount,
+          currency: rzpOrder.currency,
+          name: 'The Souled Store',
+          description: `Order #${dbOrder.orderNumber}`,
+          order_id: rzpOrder.id,
+          handler: async function (response: any) {
+            try {
+              // 4. Verify signature on backend
+              const verifyRes = await fetch(`${backendUrl}/payments/verify`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                credentials: 'include',
+                body: JSON.stringify({
+                  razorpay_order_id: response.razorpay_order_id,
+                  razorpay_payment_id: response.razorpay_payment_id,
+                  razorpay_signature: response.razorpay_signature,
+                  orderId: dbOrder.id,
+                }),
+              });
+
+              if (!verifyRes.ok) throw new Error('Payment verification failed');
+              
+              toast.success('Payment Successful', 'Your payment has been verified');
+              clearCart();
+              router.push('/orders');
+            } catch (err: any) {
+              toast.error('Verification Error', err.message || 'Verification failed');
+            }
+          },
+          prefill: {
+            name: `${formData.firstName} ${formData.lastName}`,
+            email: formData.email,
+            contact: formData.phone,
+          },
+          theme: {
+            color: '#EA580C',
+          },
+        };
+
+        const rzp = new (window as any).Razorpay(options);
+        rzp.on('payment.failed', function (response: any) {
+          toast.error('Payment Failed', response.error.description || 'Transaction failed');
+        });
+        rzp.open();
+
       } catch (e: any) {
         toast.error('Payment Error', e?.message || 'Could not start payment');
       } finally {
@@ -105,6 +215,7 @@ export default function CheckoutPage() {
             discount: cart.discount,
             total: cart.total,
           },
+          paymentMethod: 'COD',
         };
         const res = await fetch(`${backendUrl}/orders`, {
           method: 'POST',
@@ -146,7 +257,9 @@ export default function CheckoutPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 py-8 pt-24">
+    <>
+      <Script src="https://checkout.razorpay.com/v1/checkout.js" strategy="lazyOnload" />
+      <div className="min-h-screen bg-gray-50 py-8 pt-24">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Progress Steps */}
         <div className="mb-8">
@@ -218,30 +331,18 @@ export default function CheckoutPage() {
                 </h2>
                 <div className="space-y-4">
                   <div className="space-y-3">
-                    {['card', 'upi', 'cod'].map((method) => (
+                    {['razorpay', 'cod'].map((method) => (
                       <label key={method} className={`flex items-center p-4 border-2 rounded-lg cursor-pointer ${
                         formData.paymentMethod === method ? 'border-orange-500 bg-orange-50' : 'border-gray-200'
                       }`}>
                         <input type="radio" name="paymentMethod" value={method} checked={formData.paymentMethod === method}
                           onChange={handleInputChange} className="w-4 h-4 text-orange-600" />
-                        <span className="ml-3 font-medium">{method === 'card' ? 'Credit/Debit Card' : method === 'upi' ? 'UPI' : 'Cash on Delivery'}</span>
+                        <span className="ml-3 font-medium">
+                          {method === 'razorpay' ? 'Razorpay (Cards, UPI, Netbanking)' : 'Cash on Delivery'}
+                        </span>
                       </label>
                     ))}
                   </div>
-                  {formData.paymentMethod === 'card' && (
-                    <div className="space-y-4 mt-4">
-                      <input type="text" name="cardNumber" placeholder="Card Number" value={formData.cardNumber} onChange={handleInputChange}
-                        className="w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-orange-500" />
-                      <input type="text" name="cardName" placeholder="Cardholder Name" value={formData.cardName} onChange={handleInputChange}
-                        className="w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-orange-500" />
-                      <div className="grid grid-cols-2 gap-4">
-                        <input type="text" name="expiryDate" placeholder="MM/YY" value={formData.expiryDate} onChange={handleInputChange}
-                          className="w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-orange-500" />
-                        <input type="text" name="cvv" placeholder="CVV" value={formData.cvv} onChange={handleInputChange}
-                          className="w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-orange-500" />
-                      </div>
-                    </div>
-                  )}
                   <div className="flex gap-4">
                     <button onClick={() => setStep(1)} className="flex-1 border-2 border-gray-300 py-3 rounded-lg font-semibold hover:bg-gray-50">
                       Back
@@ -319,5 +420,6 @@ export default function CheckoutPage() {
         </div>
       </div>
     </div>
-  );
+  </>
+);
 }

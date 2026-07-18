@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
   ShoppingBagIcon,
@@ -35,11 +35,23 @@ export default function CartPage() {
 
   const { addItem: addToWishlist } = useWishlistStore();
   const toast = useToast();
+  const [recommendedProducts, setRecommendedProducts] = useState<any[]>([]);
 
-  // Get recommended products (products not in cart)
-  const recommendedProducts = useMemo(() => {
-    const cartProductIds = cart.items.map(item => item.productId);
-    return mockProducts.filter(product => !cartProductIds.includes(product.id)).slice(0, 4);
+  // Get recommended products dynamically from backend (fallback to mock products)
+  useEffect(() => {
+    const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL || 'http://localhost:4000';
+    fetch(`${backendUrl}/products?pageSize=10`, { credentials: 'include' })
+      .then(async (res) => {
+        if (!res.ok) throw new Error();
+        const data = await res.json();
+        const items = data.items || data;
+        const cartProductIds = cart.items.map(item => item.productId);
+        setRecommendedProducts(items.filter((p: any) => !cartProductIds.includes(p.id)).slice(0, 4));
+      })
+      .catch(() => {
+        const cartProductIds = cart.items.map(item => item.productId);
+        setRecommendedProducts(mockProducts.filter(product => !cartProductIds.includes(product.id)).slice(0, 4));
+      });
   }, [cart.items]);
 
   const handleQuantityChange = (itemId: string, newQuantity: number) => {

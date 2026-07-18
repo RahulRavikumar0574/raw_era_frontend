@@ -37,7 +37,7 @@ export default function OrderDetailsPage() {
   const [order, setOrder] = useState<ViewOrder | null>(null);
 
   useEffect(() => {
-    const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL || 'http://localhost:4001';
+    const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL || 'http://localhost:4000';
     fetch(`${backendUrl}/orders/${params.id}`, { credentials: 'include' })
       .then(async (r) => {
         if (!r.ok) return;

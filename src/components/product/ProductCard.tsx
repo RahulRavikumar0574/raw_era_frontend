@@ -108,7 +108,15 @@ export default function ProductCard({
   };
 
   const renderSizeSelector = () => {
-    if (!product.variants || product.variants.length === 0) return null;
+    const hasVariants = product.variants && product.variants.filter(v => v.type?.toLowerCase() === 'size').length > 0;
+    const sizesToRender = hasVariants
+      ? product.variants.filter(v => v.type?.toLowerCase() === 'size')
+      : [
+          { id: 'def-s', value: 'S', stock: 10 },
+          { id: 'def-m', value: 'M', stock: 10 },
+          { id: 'def-l', value: 'L', stock: 10 },
+          { id: 'def-xl', value: 'XL', stock: 10 },
+        ];
 
     return (
       <div className="mt-3">
@@ -121,29 +129,34 @@ export default function ProductCard({
           )}
         </div>
         <div className="flex flex-wrap gap-2">
-          {product.variants.map((variant) => (
-            <button
-              key={variant.id}
-              onClick={(e) => {
-                e.preventDefault();
-                e.stopPropagation();
-                handleVariantSelect(variant);
-              }}
-              className={cn(
-                'px-3 py-1.5 text-sm border rounded-md transition-all',
-                selectedVariant?.id === variant.id
-                  ? 'border-orange-500 bg-orange-50 text-orange-700'
-                  : 'border-gray-300 hover:border-gray-400 text-gray-700',
-                variant.stock === 0 && 'opacity-50 cursor-not-allowed'
-              )}
-              disabled={variant.stock === 0}
-            >
-              {variant.value}
-              {variant.stock === 0 && (
-                <span className="ml-1 text-xs">(Out)</span>
-              )}
-            </button>
-          ))}
+          {sizesToRender.map((variant) => {
+            const isSelected = selectedVariant?.id === variant.id;
+            const isOutOfStock = variant.stock === 0;
+            return (
+              <button
+                key={variant.id}
+                onClick={(e) => {
+                  e.preventDefault();
+                  e.stopPropagation();
+                  handleVariantSelect(variant);
+                }}
+                className={cn(
+                  'px-3 py-1.5 text-sm border rounded-md transition-all',
+                  isSelected
+                    ? 'border-orange-500 bg-orange-50 text-orange-700'
+                    : isOutOfStock
+                    ? 'border-gray-200 bg-gray-100 text-gray-400 cursor-not-allowed opacity-50'
+                    : 'border-gray-300 hover:border-gray-400 text-gray-700'
+                )}
+                disabled={isOutOfStock}
+              >
+                {variant.value}
+                {isOutOfStock && hasVariants && (
+                  <span className="ml-1 text-xs">(Out)</span>
+                )}
+              </button>
+            );
+          })}
         </div>
         {showSizeSelector && (
           <p className="text-xs text-red-600 mt-1">Please select a size</p>
@@ -384,27 +397,6 @@ export default function ProductCard({
             ({product.reviewCount})
           </span>
         </div>
-
-        {/* Available Sizes Display */}
-        {product.variants && product.variants.filter(v => v.type === 'SIZE').length > 0 && (
-          <div className="mb-3">
-            <div className="flex items-center gap-1 mb-1">
-              <span className="text-xs font-medium text-gray-700">Available Sizes:</span>
-            </div>
-            <div className="flex flex-wrap gap-1">
-              {product.variants
-                .filter(v => v.type === 'SIZE')
-                .map((variant) => (
-                  <span 
-                    key={variant.id}
-                    className="px-2 py-0.5 text-xs border rounded-md border-gray-300 bg-gray-50 text-gray-700"
-                  >
-                    {variant.value}
-                  </span>
-              ))}
-            </div>
-          </div>
-        )}
 
         {/* Size Selector for Grid View */}
         {renderSizeSelector()}
