@@ -99,11 +99,10 @@ export default function HomePage() {
             <h2 className="text-3xl font-bold text-gray-900 mb-4">Shop by Category</h2>
             <p className="text-gray-600">Explore our diverse collection</p>
           </div>
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             {[{name: 'Men', href: '/products?category=mens', img: 'https://images.unsplash.com/photo-1516257984-b1b4d707412e?auto=format&fit=crop&w=400&q=80'},
               {name: 'Women', href: '/products?category=womens', img: 'https://images.unsplash.com/photo-1487412720507-e7ab37603c6f?auto=format&fit=crop&w=400&q=80'},
-              {name: 'Kids', href: '/products?category=kids', img: 'https://images.unsplash.com/photo-1503944583220-79d8926ad5e2?auto=format&fit=crop&w=400&q=80'},
-              {name: 'Accessories', href: '/products?category=accessories', img: 'https://images.unsplash.com/photo-1523779917675-b6ed3a42a561?auto=format&fit=crop&w=400&q=80'}].map((cat, i) => (
+              {name: 'Kids', href: '/products?category=kids', img: 'https://images.unsplash.com/photo-1503944583220-79d8926ad5e2?auto=format&fit=crop&w=400&q=80'}].map((cat, i) => (
               <Link key={cat.name} href={cat.href} className="group relative overflow-hidden rounded-lg aspect-square">
                 <img src={cat.img} alt={cat.name} className="object-cover w-full h-full group-hover:scale-110 transition-transform duration-500" />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent flex items-end p-4">
@@ -111,41 +110,6 @@ export default function HomePage() {
                 </div>
               </Link>
             ))}
-          </div>
-        </div>
-      </div>
-
-      {/* Features Section */}
-      <div className="bg-gray-50 py-12">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }} className="flex items-start gap-4 bg-white p-6 rounded-lg shadow-sm">
-              <div className="w-12 h-12 bg-orange-100 rounded-lg flex items-center justify-center flex-shrink-0">
-                <IconTruck className="w-6 h-6 text-orange-600" />
-              </div>
-              <div>
-                <h3 className="font-semibold text-lg mb-1">Free Shipping</h3>
-                <p className="text-gray-600 text-sm">On orders over ₹500</p>
-              </div>
-            </motion.div>
-            <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }} className="flex items-start gap-4 bg-white p-6 rounded-lg shadow-sm">
-              <div className="w-12 h-12 bg-orange-100 rounded-lg flex items-center justify-center flex-shrink-0">
-                <IconShield className="w-6 h-6 text-orange-600" />
-              </div>
-              <div>
-                <h3 className="font-semibold text-lg mb-1">Secure Payment</h3>
-                <p className="text-gray-600 text-sm">100% secure transactions</p>
-              </div>
-            </motion.div>
-            <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3 }} className="flex items-start gap-4 bg-white p-6 rounded-lg shadow-sm">
-              <div className="w-12 h-12 bg-orange-100 rounded-lg flex items-center justify-center flex-shrink-0">
-                <IconTrendingUp className="w-6 h-6 text-orange-600" />
-              </div>
-              <div>
-                <h3 className="font-semibold text-lg mb-1">Premium Quality</h3>
-                <p className="text-gray-600 text-sm">Curated collections</p>
-              </div>
-            </motion.div>
           </div>
         </div>
       </div>

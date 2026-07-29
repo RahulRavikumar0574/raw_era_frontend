@@ -31,15 +31,6 @@ const categories: CategorySection[] = [
     ]
   },
   {
-    title: 'MAIN CATEGORY',
-    items: [
-      { name: 'Influencers', href: '/products?main_category=influencers', icon: StarIcon },
-      { name: 'Artists', href: '/products?main_category=artists', icon: SparklesIcon },
-      { name: 'Movies', href: '/products?main_category=movies', icon: FilmIcon },
-      { name: 'The Raw Era (OG Products)', href: '/products?main_category=raw-era', icon: SparklesIcon },
-    ]
-  },
-  {
     title: 'PRODUCTS',
     items: [
       { name: 'Oversized Tee', href: '/products?product_type=oversized-tee' },

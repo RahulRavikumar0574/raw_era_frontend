@@ -9,7 +9,8 @@ import {
   ClipboardDocumentListIcon,
   ChatBubbleLeftRightIcon,
   ArrowsUpDownIcon,
-  ShoppingBagIcon
+  ShoppingBagIcon,
+  GlobeAltIcon
 } from '@heroicons/react/24/outline';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
@@ -22,9 +23,9 @@ const navLinks = [
   { label: 'Home', href: '/' },
   { label: 'Catalog', href: '/products' },
   { label: 'Categories', href: '/categories' },
+  { label: 'Contact', href: '/feedback' },
   { label: 'Bulk Orders', href: '/bulk-order' },
   { label: 'International', href: '/international-order' },
-  { label: 'Contact', href: '/feedback' },
 ];
 
 const mostSearched = [
@@ -321,7 +322,7 @@ export default function NavbarTop({ onHamburgerClick }: { onHamburgerClick?: () 
             {/* Navigation Links */}
             <div className="space-y-1">
               {navLinks
-                .filter((link) => link.label !== 'Bulk Orders')
+                .filter((link) => link.label !== 'Bulk Orders' && link.label !== 'International')
                 .map((link) => (
                   <Link
                     key={link.label}
@@ -355,6 +356,14 @@ export default function NavbarTop({ onHamburgerClick }: { onHamburgerClick?: () 
               >
                 <IconMapPin className="w-5 h-5" />
                 <span className="font-medium">Track Order</span>
+              </Link>
+              <Link
+                href="/international-order"
+                onClick={() => setIsMobileMenuOpen(false)}
+                className="flex items-center gap-3 px-4 py-3 text-gray-700 hover:bg-orange-50 hover:text-orange-600 rounded-lg transition-colors"
+              >
+                <GlobeAltIcon className="w-5 h-5" />
+                <span className="font-medium">International</span>
               </Link>
               <Link
                 href="/orders"

@@ -158,48 +158,50 @@ export default function HorizontalFilters({
         </div>
 
         {/* Brand Filter */}
-        <div className="relative">
-          <button
-            onClick={() => toggleDropdown('brand')}
-            className="flex items-center gap-2 px-4 py-2 bg-white border border-gray-300 rounded-lg hover:bg-orange-50 hover:border-orange-300 transition-colors shadow-sm"
-          >
-            <span className="text-sm font-medium text-gray-900">
-              Brand {filters.brand && filters.brand.length > 0 && `(${filters.brand.length})`}
-            </span>
-            <ChevronDownIcon className="w-4 h-4 text-gray-600" />
-          </button>
-          
-          <AnimatePresence>
-            {openDropdown === 'brand' && (
-              <motion.div
-                initial={{ opacity: 0, y: -10 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -10 }}
-                className="absolute top-full left-0 mt-2 w-48 bg-white rounded-lg shadow-lg border border-gray-200 z-50 max-h-64 overflow-y-auto"
-              >
-                <div className="py-2">
-                  {availableBrands.map(brand => (
-                    <label key={brand} className="flex items-center px-4 py-2 hover:bg-gray-50 cursor-pointer">
-                      <input
-                        type="checkbox"
-                        checked={filters.brand?.includes(brand) || false}
-                        onChange={(e) => {
-                          const currentBrands = filters.brand || [];
-                          const newBrands = e.target.checked
-                            ? [...currentBrands, brand]
-                            : currentBrands.filter(b => b !== brand);
-                          handleFilterChange({ brand: newBrands });
-                        }}
-                        className="rounded border-gray-300 text-orange-600 focus:ring-orange-500 mr-3"
-                      />
-                      <span className="text-sm text-gray-900">{brand}</span>
-                    </label>
-                  ))}
-                </div>
-              </motion.div>
-            )}
-          </AnimatePresence>
-        </div>
+        {!['mens', 'womens', 'kids', 'accessories'].includes(filters.category || '') && (
+          <div className="relative">
+            <button
+              onClick={() => toggleDropdown('brand')}
+              className="flex items-center gap-2 px-4 py-2 bg-white border border-gray-300 rounded-lg hover:bg-orange-50 hover:border-orange-300 transition-colors shadow-sm"
+            >
+              <span className="text-sm font-medium text-gray-900">
+                Brand {filters.brand && filters.brand.length > 0 && `(${filters.brand.length})`}
+              </span>
+              <ChevronDownIcon className="w-4 h-4 text-gray-600" />
+            </button>
+            
+            <AnimatePresence>
+              {openDropdown === 'brand' && (
+                <motion.div
+                  initial={{ opacity: 0, y: -10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -10 }}
+                  className="absolute top-full left-0 mt-2 w-48 bg-white rounded-lg shadow-lg border border-gray-200 z-50 max-h-64 overflow-y-auto"
+                >
+                  <div className="py-2">
+                    {availableBrands.map(brand => (
+                      <label key={brand} className="flex items-center px-4 py-2 hover:bg-gray-50 cursor-pointer">
+                        <input
+                          type="checkbox"
+                          checked={filters.brand?.includes(brand) || false}
+                          onChange={(e) => {
+                            const currentBrands = filters.brand || [];
+                            const newBrands = e.target.checked
+                              ? [...currentBrands, brand]
+                              : currentBrands.filter(b => b !== brand);
+                            handleFilterChange({ brand: newBrands });
+                          }}
+                          className="rounded border-gray-300 text-orange-600 focus:ring-orange-500 mr-3"
+                        />
+                        <span className="text-sm text-gray-900">{brand}</span>
+                      </label>
+                    ))}
+                  </div>
+                </motion.div>
+              )}
+            </AnimatePresence>
+          </div>
+        )}
 
         {/* Rating Filter */}
         <div className="relative">

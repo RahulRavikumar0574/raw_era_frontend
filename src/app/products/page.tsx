@@ -35,7 +35,7 @@ function ProductsPageContent() {
     
     if (category) {
       setCurrentCategory(category);
-      updateFilters({ category });
+      updateFilters({ category, brand: undefined });
     }
     if (query) {
       setSearchQuery(query);
@@ -103,7 +103,30 @@ function ProductsPageContent() {
         if (!r.ok) throw new Error('Failed to load products');
         const data = await r.json();
         const items: Product[] = data.items || data; // support array or paged
-        setFilteredProducts(items);
+        
+        // Apply client-side filters (brand, priceRange, rating, inStock, isNew, isFeatured)
+        let filtered = [...items];
+        if (filters.brand && filters.brand.length > 0) {
+          filtered = filtered.filter(p => filters.brand?.includes(p.brand));
+        }
+        if (filters.priceRange) {
+          const [min, max] = filters.priceRange;
+          filtered = filtered.filter(p => p.price >= min && p.price <= max);
+        }
+        if (filters.rating) {
+          filtered = filtered.filter(p => p.rating >= filters.rating!);
+        }
+        if (filters.inStock) {
+          filtered = filtered.filter(p => p.stock > 0);
+        }
+        if (filters.isNew) {
+          filtered = filtered.filter(p => p.isNew);
+        }
+        if (filters.isFeatured) {
+          filtered = filtered.filter(p => p.isFeatured);
+        }
+        
+        setFilteredProducts(filtered);
       })
       .catch(() => {})
       .finally(() => setIsLoading(false));
@@ -199,7 +222,7 @@ function ProductsPageContent() {
                   key={cat.slug}
                   onClick={() => {
                     setCurrentCategory(cat.slug);
-                    updateFilters({ category: cat.slug });
+                    updateFilters({ category: cat.slug, brand: undefined });
                   }}
                   className={cn(
                     'px-4 py-2 rounded-lg font-medium whitespace-nowrap transition-colors',

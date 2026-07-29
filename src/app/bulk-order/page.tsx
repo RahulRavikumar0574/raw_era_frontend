@@ -12,7 +12,8 @@ import {
   CheckCircleIcon,
   TruckIcon,
   TagIcon,
-  CalculatorIcon
+  CalculatorIcon,
+  PaperClipIcon
 } from '@heroicons/react/24/outline';
 import { useToast } from '@/hooks/useToast';
 
@@ -36,6 +37,7 @@ interface BulkOrderForm {
   customizationDetails: string;
   additionalNotes: string;
   customImages: File[];
+  attachments: File[];
 }
 
 const quantityTiers = [
@@ -52,7 +54,6 @@ const productCategories = [
   'Hoodies & Sweatshirts',
   'Jackets',
   'Pants & Jeans',
-  'Accessories',
   'Custom Merchandise',
   'Corporate Uniforms',
   'Other'
@@ -75,7 +76,8 @@ export default function BulkOrderPage() {
     customizationRequired: false,
     customizationDetails: '',
     additionalNotes: '',
-    customImages: []
+    customImages: [],
+    attachments: []
   });
 
   const handleInputChange = (
@@ -105,6 +107,24 @@ export default function BulkOrderPage() {
     setFormData(prev => ({
       ...prev,
       customImages: prev.customImages.filter((_, i) => i !== index)
+    }));
+  };
+
+  const handleAttachmentUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const files = e.target.files;
+    if (files) {
+      const validFiles = Array.from(files);
+      setFormData(prev => ({
+        ...prev,
+        attachments: [...prev.attachments, ...validFiles]
+      }));
+    }
+  };
+
+  const removeAttachment = (index: number) => {
+    setFormData(prev => ({
+      ...prev,
+      attachments: prev.attachments.filter((_, i) => i !== index)
     }));
   };
 
@@ -138,6 +158,7 @@ export default function BulkOrderPage() {
     setTimeout(() => {
       console.log('Bulk Order Submitted:', formData);
       console.log('Customization Images:', formData.customImages);
+      console.log('Attachments:', formData.attachments);
       toast.success(
         'Bulk Order Request Submitted!',
         'Our team will contact you within 24-48 hours with a detailed quote.'
@@ -158,7 +179,8 @@ export default function BulkOrderPage() {
         customizationRequired: false,
         customizationDetails: '',
         additionalNotes: '',
-        customImages: []
+        customImages: [],
+        attachments: []
       });
       
       setIsSubmitting(false);
@@ -472,6 +494,48 @@ export default function BulkOrderPage() {
                       placeholder="Any other requirements or questions?"
                     />
                   </div>
+                </div>
+              </div>
+
+              {/* Attachments */}
+              <div className="mb-8">
+                <h2 className="text-xl font-semibold text-gray-900 mb-4 flex items-center gap-2">
+                  <PaperClipIcon className="w-6 h-6 text-orange-600" />
+                  Attachments
+                </h2>
+                <div className="space-y-4">
+                  <div className="border-2 border-dashed border-gray-300 rounded-lg p-6 hover:border-orange-500 transition-colors">
+                    <input
+                      type="file"
+                      multiple
+                      onChange={handleAttachmentUpload}
+                      className="w-full text-sm text-gray-600 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:bg-orange-50 file:text-orange-700 file:cursor-pointer hover:file:bg-orange-100"
+                    />
+                    <p className="mt-2 text-xs text-gray-500">
+                      Upload any relevant reference files (designs, layout, size list, PDF, ZIP, etc.)
+                    </p>
+                  </div>
+
+                  {formData.attachments.length > 0 && (
+                    <div className="space-y-2">
+                      {formData.attachments.map((file, index) => (
+                        <div key={index} className="flex items-center justify-between p-2.5 bg-gray-50 rounded-lg border border-gray-200">
+                          <div className="flex items-center gap-2 max-w-[80%]">
+                            <PaperClipIcon className="w-4 h-4 text-gray-400 flex-shrink-0" />
+                            <span className="text-sm text-gray-600 truncate">{file.name}</span>
+                            <span className="text-xs text-gray-400">({(file.size / 1024).toFixed(1)} KB)</span>
+                          </div>
+                          <button
+                            type="button"
+                            onClick={() => removeAttachment(index)}
+                            className="text-red-500 hover:text-red-700 text-sm font-semibold transition-colors"
+                          >
+                            Remove
+                          </button>
+                        </div>
+                      ))}
+                    </div>
+                  )}
                 </div>
               </div>
 

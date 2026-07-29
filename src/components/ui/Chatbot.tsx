@@ -27,7 +27,7 @@ export const Chatbot: React.FC = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [sessionId, setSessionId] = useState<string>('');
   const [selectedImage, setSelectedImage] = useState<{ data: string; type: string } | null>(null);
-  const [isMinimized, setIsMinimized] = useState(false);
+  const [isMinimized, setIsMinimized] = useState(true);
   const recognitionRef = useRef<any>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
@@ -548,6 +548,15 @@ export const Chatbot: React.FC = () => {
         @keyframes blink {
           0%, 100% { opacity: 0.2; }
           50% { opacity: 1; }
+        }
+        @media (max-width: 640px) {
+          .chatbot {
+            right: 16px !important;
+            left: 16px !important;
+            width: auto !important;
+            bottom: 80px !important;
+            max-height: 70vh !important;
+          }
         }
       `}</style>
     </div>
