@@ -45,7 +45,7 @@ export default function TrackOrderPage() {
         estimatedDelivery: 'Dec 25, 2024',
         carrier: 'FedEx',
         trackingNumber: 'FDX' + Math.random().toString(36).substr(2, 9).toUpperCase(),
-        currentLocation: 'Mumbai Distribution Center',
+        currentLocation: 'Keralam Distribution Center',
         timeline: [
           {
             status: 'Order Placed',
@@ -70,7 +70,7 @@ export default function TrackOrderPage() {
           },
           {
             status: 'In Transit',
-            location: 'Mumbai Distribution Center',
+            location: 'Keralam Distribution Center',
             timestamp: 'Dec 22, 2024 4:30 PM',
             description: 'Package is on the way to your location',
             completed: true

@@ -141,7 +141,7 @@ export default function PrivacyPage() {
               <p><strong>Email:</strong> <a href="mailto:Info@rawera.com" className="text-orange-600 hover:underline">Info@rawera.com</a></p>
               <p><strong>Phone:</strong> <a href="tel:+919946812233" className="text-orange-600 hover:underline">+91 99468 12233</a></p>
               <p><strong>Instagram:</strong> <a href="https://www.instagram.com/the.rawera?igsh=YzA5dzA0dndjOTJ2" target="_blank" rel="noopener noreferrer" className="text-orange-600 hover:underline">@the.rawera</a></p>
-              <p><strong>Address:</strong> Mumbai, Maharashtra, India</p>
+              <p><strong>Address:</strong> Keralam, India</p>
             </div>
           </section>
         </motion.div>

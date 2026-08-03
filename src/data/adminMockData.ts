@@ -68,8 +68,8 @@ export const adminOrders: AdminOrder[] = [
     shippingAddress: {
       name: 'Rajesh Kumar',
       address: '123 MG Road, Apartment 4B',
-      city: 'Mumbai',
-      state: 'Maharashtra',
+      city: 'Kochi',
+      state: 'Keralam',
       postalCode: '400001',
       country: 'India'
     },
@@ -266,8 +266,8 @@ export const adminCustomers: AdminCustomer[] = [
     joinedDate: '2024-06-15T00:00:00Z',
     lastOrderDate: '2024-12-20T00:00:00Z',
     address: {
-      city: 'Mumbai',
-      state: 'Maharashtra',
+      city: 'Kochi',
+      state: 'Keralam',
       country: 'India'
     }
   },

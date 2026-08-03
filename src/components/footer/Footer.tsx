@@ -33,7 +33,7 @@ function ContactDetails() {
       </a>
       <div className="flex items-center gap-2 text-sm text-gray-400">
         <MapPinIcon className="w-4 h-4 text-orange-500 flex-shrink-0" />
-        <span>Mumbai, Maharashtra, India</span>
+        <span>Keralam, India</span>
       </div>
     </div>
   );
