@@ -41,14 +41,14 @@ export default function AdminLoginPage() {
       // Simulate API call
       await new Promise(resolve => setTimeout(resolve, 2000));
       
-      // For demo purposes, accept admin@souledstore.com / admin123
-      if (formData.email === 'admin@souledstore.com' && formData.password === 'admin123') {
+      // For demo purposes, accept therawerawears@gmail.com / Rawera@2026
+      if (formData.email === 'therawerawears@gmail.com' && formData.password === 'Rawera@2026') {
         // Store admin session
         localStorage.setItem('admin_token', 'demo_admin_token');
         localStorage.setItem('admin_user', JSON.stringify({
           id: 'admin-1',
-          email: 'admin@souledstore.com',
-          name: 'Admin User',
+          email: 'therawerawears@gmail.com',
+          name: 'Raw Era Admin',
           role: 'super_admin',
           permissions: ['all']
         }));

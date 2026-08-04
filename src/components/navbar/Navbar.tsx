@@ -1,7 +1,8 @@
 "use client";
 
 import { useState, useRef, useEffect } from 'react';
-import { IconUser, IconHeart, IconShoppingCart, IconMapPin, IconMenu2 } from '@tabler/icons-react';
+import { IconUser, IconHeart, IconShoppingCart, IconMapPin, IconMenu2, IconX } from '@tabler/icons-react';
+import { motion, AnimatePresence } from 'framer-motion';
 import {
   UserCircleIcon,
   Cog6ToothIcon,
@@ -42,6 +43,7 @@ export default function NavbarTop({ onHamburgerClick }: { onHamburgerClick?: () 
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const userMenuRef = useRef<HTMLDivElement>(null);
   const mobileMenuRef = useRef<HTMLDivElement>(null);
+  const hamburgerBtnRef = useRef<HTMLButtonElement>(null);
   
   const router = useRouter();
   const cartItems = useCartStore(state => state.cart.items);
@@ -117,7 +119,11 @@ export default function NavbarTop({ onHamburgerClick }: { onHamburgerClick?: () 
       if (userMenuRef.current && !userMenuRef.current.contains(event.target as Node)) {
         setIsUserMenuOpen(false);
       }
-      if (mobileMenuRef.current && !mobileMenuRef.current.contains(event.target as Node)) {
+      if (
+        mobileMenuRef.current &&
+        !mobileMenuRef.current.contains(event.target as Node) &&
+        (!hamburgerBtnRef.current || !hamburgerBtnRef.current.contains(event.target as Node))
+      ) {
         setIsMobileMenuOpen(false);
       }
     };
@@ -125,6 +131,18 @@ export default function NavbarTop({ onHamburgerClick }: { onHamburgerClick?: () 
     document.addEventListener('mousedown', handleClickOutside);
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
+
+  // Prevent body scroll when mobile menu is open
+  useEffect(() => {
+    if (isMobileMenuOpen) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = '';
+    }
+    return () => {
+      document.body.style.overflow = '';
+    };
+  }, [isMobileMenuOpen]);
   return (
     <nav className="bg-white border-b border-gray-200 sticky top-0 z-50 w-full">
 
@@ -135,12 +153,24 @@ export default function NavbarTop({ onHamburgerClick }: { onHamburgerClick?: () 
           {/* Left Section - Hamburger + Logo */}
           <div className="flex items-center">
             <button
-              className="mr-4 p-2 rounded-lg hover:bg-gray-100 transition-colors lg:hidden"
+              ref={hamburgerBtnRef}
+              className="mr-4 p-2 rounded-lg hover:bg-gray-100 transition-colors lg:hidden relative z-50"
               onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
               aria-label="Toggle menu"
               type="button"
             >
-              <IconMenu2 className="w-6 h-6 text-gray-700" />
+              <motion.div
+                key={isMobileMenuOpen ? 'open' : 'closed'}
+                initial={{ rotate: -90, opacity: 0 }}
+                animate={{ rotate: 0, opacity: 1 }}
+                transition={{ duration: 0.2 }}
+              >
+                {isMobileMenuOpen ? (
+                  <IconX className="w-6 h-6 text-gray-700" />
+                ) : (
+                  <IconMenu2 className="w-6 h-6 text-gray-700" />
+                )}
+              </motion.div>
             </button>
             
             {/* Logo */}
@@ -296,8 +326,16 @@ export default function NavbarTop({ onHamburgerClick }: { onHamburgerClick?: () 
       </div>
 
       {/* Mobile Dropdown Menu */}
-      {isMobileMenuOpen && (
-        <div ref={mobileMenuRef} className="lg:hidden bg-white border-t border-gray-200 shadow-lg">
+      <AnimatePresence>
+        {isMobileMenuOpen && (
+          <motion.div
+            ref={mobileMenuRef}
+            initial={{ height: 0, opacity: 0 }}
+            animate={{ height: 'auto', opacity: 1 }}
+            exit={{ height: 0, opacity: 0 }}
+            transition={{ duration: 0.3, ease: 'easeInOut' }}
+            className="lg:hidden absolute top-full left-0 right-0 w-full bg-white border-t border-gray-200 shadow-xl z-50 overflow-y-auto max-h-[calc(100vh-4rem)]"
+          >
           <div className="max-w-7xl mx-auto px-4 py-4">
             {/* Search Bar - Mobile */}
             <div className="mb-4">
@@ -454,8 +492,9 @@ export default function NavbarTop({ onHamburgerClick }: { onHamburgerClick?: () 
               </div>
             </div>
           </div>
-        </div>
+        </motion.div>
       )}
+      </AnimatePresence>
     </nav>
   );
 }
