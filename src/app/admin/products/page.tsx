@@ -112,7 +112,10 @@ export default function AdminProductsPage() {
             <h1 className="text-3xl font-bold text-gray-900">Products</h1>
             <p className="text-gray-600 mt-1">Manage your product catalog</p>
           </div>
-          <button className="flex items-center gap-2 px-4 py-2 bg-orange-600 text-white rounded-lg hover:bg-orange-700 transition-colors">
+          <button
+            onClick={() => router.push('/admin/products/create')}
+            className="flex items-center gap-2 px-4 py-2 bg-orange-600 text-white rounded-lg hover:bg-orange-700 transition-colors"
+          >
             <PlusIcon className="w-5 h-5" />
             Add Product
           </button>
@@ -319,7 +322,7 @@ export default function AdminProductsPage() {
             className="flex items-center justify-between mt-6"
           >
             <p className="text-sm text-gray-600">
-              Showing {filteredProducts.length} of {products.length} products
+              Showing {filteredProducts.length} of {storeProducts.length} products
             </p>
             <div className="flex items-center gap-2">
               <button className="px-3 py-2 border border-gray-300 rounded-lg hover:bg-gray-50 disabled:opacity-50">

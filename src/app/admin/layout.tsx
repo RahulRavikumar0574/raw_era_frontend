@@ -27,7 +27,7 @@ interface AdminLayoutProps {
 
 const navigation = [
   { name: 'Dashboard', href: '/admin/dashboard', icon: HomeIcon },
-  { name: 'Products', href: '/admin/products/create', icon: ShoppingBagIcon },
+  { name: 'Products', href: '/admin/products', icon: ShoppingBagIcon },
   { name: 'Orders', href: '/admin/orders', icon: ClipboardDocumentListIcon },
   { name: 'Customers', href: '/admin/customers', icon: UsersIcon },
   { name: 'Analytics', href: '/admin/analytics', icon: ChartBarIcon },

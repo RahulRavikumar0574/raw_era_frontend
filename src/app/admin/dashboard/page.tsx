@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { motion } from 'framer-motion';
 import {
   ChartBarIcon,
@@ -16,7 +16,6 @@ import {
   XCircleIcon
 } from '@heroicons/react/24/outline';
 import { cn } from '@/lib/utils';
-import { useToast } from '@/hooks/useToast';
 
 interface KPI {
   id: string;
@@ -141,44 +140,56 @@ export default function AdminDashboard() {
   const [timeRange, setTimeRange] = useState('7d');
   const [isLoading, setIsLoading] = useState(true);
   const [stats, setStats] = useState<any>(null);
-  const toast = useToast();
+  // Use a ref so we can track mounted state without it being a dep
+  const activeRef = useRef(true);
 
   useEffect(() => {
-    let active = true;
+    activeRef.current = true;
+    setIsLoading(true);
+
+    // 3-second timeout — if API doesn't respond, fall back immediately
+    const timeout = setTimeout(() => {
+      if (activeRef.current && !stats) {
+        setStats(fallbackStats);
+        setIsLoading(false);
+      }
+    }, 3000);
+
     const fetchDashboardData = async () => {
-      setIsLoading(true);
       try {
         const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL || 'http://localhost:4000';
         const response = await fetch(`${backendUrl}/analytics?timeRange=${timeRange}`, {
-          credentials: 'include'
+          credentials: 'include',
+          signal: AbortSignal.timeout(5000)
         });
-        
+
         if (!response.ok) {
           throw new Error('Failed to fetch dashboard data');
         }
-        
+
         const data = await response.json();
-        if (active) {
+        if (activeRef.current) {
+          clearTimeout(timeout);
           setStats(data);
+          setIsLoading(false);
         }
-      } catch (error) {
-        console.error('Error fetching dashboard data:', error);
-        if (active) {
-          toast.error('Failed to load dashboard data');
+      } catch {
+        // On any error, use fallback data immediately
+        if (activeRef.current) {
+          clearTimeout(timeout);
           setStats(fallbackStats);
-        }
-      } finally {
-        if (active) {
           setIsLoading(false);
         }
       }
     };
-    
+
     fetchDashboardData();
+
     return () => {
-      active = false;
+      activeRef.current = false;
+      clearTimeout(timeout);
     };
-  }, [timeRange]);
+  }, [timeRange]); // only re-fetch when timeRange changes
 
   const iconMap: Record<string, any> = {
     revenue: CurrencyDollarIcon,
@@ -193,7 +204,6 @@ export default function AdminDashboard() {
   })) || [];
 
   const salesData: ChartData[] = stats?.salesData || [];
-
   const topProducts: TopProduct[] = stats?.topProducts || [];
 
   const orderStatuses: OrderStatus[] = (stats?.orderStatuses || []).map((s: any) => {
@@ -212,8 +222,9 @@ export default function AdminDashboard() {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-        <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-orange-500"></div>
+      <div className="min-h-screen bg-gray-50 flex flex-col items-center justify-center gap-4">
+        <div className="animate-spin rounded-full h-16 w-16 border-4 border-orange-200 border-t-orange-500" />
+        <p className="text-gray-500 text-sm animate-pulse">Loading dashboard...</p>
       </div>
     );
   }
@@ -228,7 +239,7 @@ export default function AdminDashboard() {
               <h1 className="text-3xl font-bold text-gray-900">Dashboard</h1>
               <p className="text-gray-600 mt-1">Welcome back! Here's what's happening with your store.</p>
             </div>
-            
+
             {/* Time Range Selector */}
             <div className="flex bg-white rounded-lg border border-gray-200 p-1">
               {['24h', '7d', '30d', '90d'].map((range) => (
@@ -310,7 +321,7 @@ export default function AdminDashboard() {
                 </button>
               </div>
             </div>
-            
+
             {/* Simple Bar Chart */}
             <div className="space-y-4">
               {salesData.map((data, index) => (
@@ -380,7 +391,7 @@ export default function AdminDashboard() {
               View All Products
             </button>
           </div>
-          
+
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
             {topProducts.map((product, index) => (
               <motion.div
@@ -396,7 +407,7 @@ export default function AdminDashboard() {
                     alt={product.name}
                     className="w-full h-full object-cover"
                     onError={(e) => {
-                      e.currentTarget.src = `https://via.placeholder.com/200x200?text=${product.name.split(' ')[0]}`;
+                      e.currentTarget.src = `https://placehold.co/200x200?text=${product.name.split(' ')[0]}`;
                     }}
                   />
                 </div>
