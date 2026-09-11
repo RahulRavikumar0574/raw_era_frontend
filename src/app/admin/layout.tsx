@@ -86,9 +86,11 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
         <div className="fixed inset-y-0 left-0 flex w-64 flex-col bg-white shadow-xl">
           <div className="flex h-16 items-center justify-between px-6 border-b border-gray-200">
             <div className="flex items-center">
-              <div className="w-8 h-8 bg-gradient-to-br from-orange-500 to-orange-600 rounded-lg flex items-center justify-center">
-                <span className="text-white font-bold text-lg">S</span>
-              </div>
+              <img
+                src="/raw_era.png"
+                alt="The Raw Era logo"
+                className="h-8 w-8 object-cover rounded-lg"
+              />
               <span className="ml-2 text-xl font-bold text-gray-900">Admin</span>
             </div>
             <button
@@ -124,9 +126,11 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
         <div className="flex flex-col flex-grow bg-white border-r border-gray-200">
           <div className="flex h-16 items-center px-6 border-b border-gray-200">
             <div className="flex items-center">
-              <div className="w-8 h-8 bg-gradient-to-br from-orange-500 to-orange-600 rounded-lg flex items-center justify-center">
-                <span className="text-white font-bold text-lg">S</span>
-              </div>
+              <img
+                src="/raw_era.png"
+                alt="The Raw Era logo"
+                className="h-8 w-8 object-cover rounded-lg"
+              />
               <span className="ml-2 text-xl font-bold text-gray-900">Admin</span>
             </div>
           </div>

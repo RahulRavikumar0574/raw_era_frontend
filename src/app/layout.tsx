@@ -17,6 +17,11 @@ const geistMono = Geist_Mono({
 export const metadata: Metadata = {
   title: "The Raw Era - Premium Fashion & Lifestyle",
   description: "Discover trendy clothing, accessories, and lifestyle products at The Raw Era. Shop the latest fashion with fast delivery and easy returns.",
+  icons: {
+    icon: "/raw_era.png",
+    shortcut: "/raw_era.png",
+    apple: "/raw_era.png",
+  },
 };
 
 export default function RootLayout({

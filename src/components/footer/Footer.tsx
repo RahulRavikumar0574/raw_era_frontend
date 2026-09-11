@@ -48,9 +48,11 @@ export default function Footer() {
           {/* About Section */}
           <div>
             <div className="flex items-center space-x-2 mb-4">
-              <div className="w-10 h-10 bg-gradient-to-br from-orange-500 to-orange-600 rounded-lg flex items-center justify-center">
-                <span className="text-white font-bold text-xl">R</span>
-              </div>
+              <img
+                src="/raw_era.png"
+                alt="The Raw Era logo"
+                className="h-10 w-10 object-cover rounded-lg"
+              />
               <span className="text-xl font-bold text-white">The Raw Era</span>
             </div>
             <p className="text-sm text-gray-400 mb-4">
