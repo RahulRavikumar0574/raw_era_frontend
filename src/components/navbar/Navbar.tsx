@@ -174,13 +174,12 @@ export default function NavbarTop({ onHamburgerClick }: { onHamburgerClick?: () 
             </button>
             
             {/* Logo */}
-            <Link href="/" className="flex items-center space-x-2">
-              <div className="w-8 h-8 bg-gradient-to-br from-orange-500 to-orange-600 rounded-lg flex items-center justify-center">
-                <span className="text-white font-bold text-lg">R</span>
-              </div>
-              <span className="text-xl md:text-2xl font-bold bg-gradient-to-r from-orange-600 to-orange-700 bg-clip-text text-transparent">
-                The Raw Era
-              </span>
+            <Link href="/" className="flex items-center">
+              <img
+                src="/raw_era.jpeg"
+                alt="The Raw Era"
+                className="h-10 w-auto object-contain"
+              />
             </Link>
           </div>
           {/* Center Section - Desktop Nav Links */}
