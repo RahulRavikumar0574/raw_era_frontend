@@ -50,7 +50,8 @@ function ProductsPageContent() {
       .then(async (r) => {
         if (!r.ok) throw new Error('Failed to load categories');
         const data = await r.json();
-        setCategories(Array.isArray(data) ? data : []);
+        const cats = Array.isArray(data) ? data : Array.isArray(data?.categories) ? data.categories : [];
+        setCategories(cats);
       })
       .catch(() => {});
     return () => controller.abort();
@@ -100,10 +101,13 @@ function ProductsPageContent() {
       signal: controller.signal,
     })
       .then(async (r) => {
-        if (!r.ok) throw new Error('Failed to load products');
+        if (!r.ok) {
+          const errText = await r.text().catch(() => '');
+          throw new Error(`Server error ${r.status}: ${errText}`);
+        }
         const data = await r.json();
         const items: Product[] = data.items || data; // support array or paged
-        
+
         // Apply client-side filters (brand, priceRange, rating, inStock, isNew, isFeatured)
         let filtered = [...items];
         if (filters.brand && filters.brand.length > 0) {
@@ -125,13 +129,19 @@ function ProductsPageContent() {
         if (filters.isFeatured) {
           filtered = filtered.filter(p => p.isFeatured);
         }
-        
+
         setFilteredProducts(filtered);
       })
-      .catch(() => {})
+      .catch((err) => {
+        if ((err as any)?.name === 'AbortError') return;
+        // Fallback: show Zustand store products (includes any locally cached ones)
+        console.error('[Products] Backend fetch failed, using store fallback:', err);
+        setFilteredProducts(storeProducts);
+      })
       .finally(() => setIsLoading(false));
     return () => controller.abort();
   }, [filters, searchQuery, currentCategory]);
+
 
   const handleFiltersChange = (newFilters: SearchFilters) => {
     updateFilters(newFilters);
