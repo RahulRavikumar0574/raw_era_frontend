@@ -23,7 +23,7 @@ import { cn } from '@/lib/utils';
 const navLinks = [
   { label: 'Home', href: '/' },
   { label: 'Catalog', href: '/products' },
-  { label: 'Categories', href: '/categories' },
+  // { label: 'Categories', href: '/categories' },
   { label: 'Contact', href: '/feedback' },
   { label: 'Bulk Orders', href: '/bulk-order' },
   { label: 'International', href: '/international-order' },

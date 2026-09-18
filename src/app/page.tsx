@@ -93,6 +93,7 @@ export default function HomePage() {
       </div>
 
       {/* Categories Section */}
+      {/* 
       <div className="py-16 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12">
@@ -113,6 +114,7 @@ export default function HomePage() {
           </div>
         </div>
       </div>
+      */}
 
       {/* CTA Section */}
       <div className="bg-gradient-to-r from-orange-600 to-orange-700 py-16">
