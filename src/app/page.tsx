@@ -100,9 +100,9 @@ export default function HomePage() {
             <p className="text-gray-600">Explore our diverse collection</p>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            {[{name: 'Men', href: '/products?category=mens', img: 'https://images.unsplash.com/photo-1516257984-b1b4d707412e?auto=format&fit=crop&w=400&q=80'},
-              {name: 'Women', href: '/products?category=womens', img: 'https://images.unsplash.com/photo-1487412720507-e7ab37603c6f?auto=format&fit=crop&w=400&q=80'},
-              {name: 'Kids', href: '/products?category=kids', img: 'https://images.unsplash.com/photo-1503944583220-79d8926ad5e2?auto=format&fit=crop&w=400&q=80'}].map((cat, i) => (
+            {[{name: 'Men', href: '/products?category=mens', img: '/categories/mens_minimalist.jpg'},
+              {name: 'Women', href: '/products?category=womens', img: '/categories/womens_minimalist.jpg'},
+              {name: 'Kids', href: '/products?category=kids', img: '/categories/kids_minimalist.jpg'}].map((cat, i) => (
               <Link key={cat.name} href={cat.href} className="group relative overflow-hidden rounded-lg aspect-square">
                 <img src={cat.img} alt={cat.name} className="object-cover w-full h-full group-hover:scale-110 transition-transform duration-500" />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent flex items-end p-4">
