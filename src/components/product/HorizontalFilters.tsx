@@ -158,7 +158,7 @@ export default function HorizontalFilters({
         </div>
 
         {/* Brand Filter */}
-        {!['mens', 'womens', 'kids', 'accessories'].includes(filters.category || '') && (
+        {!['unisex', 'unisex-bottoms', 'accessories', 'footwear'].includes(filters.category || '') && (
           <div className="relative">
             <button
               onClick={() => toggleDropdown('brand')}

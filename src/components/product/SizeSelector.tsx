@@ -13,7 +13,7 @@ interface SizeSelectorProps {
   showStock?: boolean;
   size?: 'sm' | 'md' | 'lg';
   className?: string;
-  gender?: 'men' | 'women';
+  gender?: 'unisex' | 'fitted';
 }
 
 export default function SizeSelector({
@@ -23,7 +23,7 @@ export default function SizeSelector({
   showStock = false,
   size = 'md',
   className,
-  gender = 'men',
+  gender = 'unisex',
 }: SizeSelectorProps) {
   const [hoveredVariant, setHoveredVariant] = useState<string | null>(null);
   const [showGuide, setShowGuide] = useState(false);
@@ -157,9 +157,9 @@ export default function SizeSelector({
               </button>
             </div>
             <div className="p-8 md:p-10 bg-white text-gray-900">
-              {gender === 'men' ? (
+              {gender === 'unisex' ? (
                 <>
-                  <h3 className="font-bold text-orange-600 mb-2 text-base md:text-lg">Men's Tops</h3>
+                  <h3 className="font-bold text-orange-600 mb-2 text-base md:text-lg">Topwear</h3>
                   <table className="w-full mb-6 border border-orange-200 rounded-lg overflow-hidden text-xs md:text-sm bg-white">
                     <thead>
                       <tr className="bg-orange-200 text-gray-900">
@@ -178,7 +178,7 @@ export default function SizeSelector({
                     <tr><td className="border px-2 py-1">XXL</td><td className="border px-2 py-1">47-49</td><td className="border px-2 py-1">38.5</td><td className="border px-2 py-1">119-124</td><td className="border px-2 py-1">98</td></tr>
                   </tbody>
                 </table>
-                  <h3 className="font-bold text-orange-600 mb-2 text-base md:text-lg">Men's Bottoms</h3>
+                  <h3 className="font-bold text-orange-600 mb-2 text-base md:text-lg">Bottoms</h3>
                   <table className="w-full mb-6 border border-orange-200 rounded-lg overflow-hidden text-xs md:text-sm bg-white">
                     <thead>
                       <tr className="bg-orange-200 text-gray-900">
@@ -202,7 +202,7 @@ export default function SizeSelector({
               </>
             ) : (
               <>
-                <h3 className="font-bold text-orange-600 mb-2 text-base md:text-lg">Women's Garments</h3>
+                <h3 className="font-bold text-orange-600 mb-2 text-base md:text-lg">Fitted Garments</h3>
                 <table className="w-full mb-6 border border-orange-200 rounded-lg overflow-hidden text-xs md:text-sm bg-white">
                   <thead>
                     <tr className="bg-orange-200 text-gray-900">

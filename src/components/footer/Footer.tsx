@@ -56,7 +56,7 @@ export default function Footer() {
               <span className="text-xl font-bold text-white">The Raw Era</span>
             </div>
             <p className="text-sm text-gray-400 mb-4">
-              Your destination for premium quality fashion. Discover trendy clothing for men, women, and kids.
+              Your destination for premium quality fashion. Discover trendy clothing for everyone.
             </p>
           </div>
 

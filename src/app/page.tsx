@@ -29,9 +29,9 @@ export default function HomePage() {
             <div>
               <div className="font-bold mb-2 text-gray-800 text-md tracking-wide uppercase">CATEGORY</div>
               <ul className="mb-4 pl-2 space-y-1">
-                <li><Link href="/products?category=mens" className="text-gray-800 hover:text-blue-600 font-medium transition-colors">Men</Link></li>
-                <li><Link href="/products?category=womens" className="text-gray-800 hover:text-blue-600 font-medium transition-colors">Women</Link></li>
-                <li><Link href="/products?category=kids" className="text-gray-800 hover:text-blue-600 font-medium transition-colors">Kids</Link></li>
+                <li><Link href="/products?category=unisex" className="text-gray-800 hover:text-blue-600 font-medium transition-colors">Unisex Topwear</Link></li>
+                <li><Link href="/products?category=unisex-bottoms" className="text-gray-800 hover:text-blue-600 font-medium transition-colors">Unisex Bottoms</Link></li>
+                <li><Link href="/products?category=accessories" className="text-gray-800 hover:text-blue-600 font-medium transition-colors">Accessories</Link></li>
               </ul>
               <div className="font-bold mb-2 text-gray-800 text-md tracking-wide uppercase">MAIN CATEGORY</div>
               <ul className="mb-4 pl-2 space-y-1">
@@ -101,9 +101,9 @@ export default function HomePage() {
             <p className="text-gray-600">Explore our diverse collection</p>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            {[{name: 'Men', href: '/products?category=mens', img: '/categories/mens_minimalist.jpg'},
-              {name: 'Women', href: '/products?category=womens', img: '/categories/womens_minimalist.jpg'},
-              {name: 'Kids', href: '/products?category=kids', img: '/categories/kids_minimalist.jpg'}].map((cat, i) => (
+            {[{name: 'Unisex', href: '/products?category=unisex', img: '/categories/unisex_minimalist.jpg'},
+              {name: 'Accessories', href: '/products?category=accessories', img: '/categories/accessories_minimalist.jpg'},
+              {name: 'Footwear', href: '/products?category=footwear', img: '/categories/footwear_minimalist.jpg'}].map((cat, i) => (
               <Link key={cat.name} href={cat.href} className="group relative overflow-hidden rounded-lg aspect-square">
                 <img src={cat.img} alt={cat.name} className="object-cover w-full h-full group-hover:scale-110 transition-transform duration-500" />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent flex items-end p-4">

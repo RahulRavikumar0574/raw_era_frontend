@@ -25,9 +25,10 @@ const categories: CategorySection[] = [
   {
     title: 'CATEGORY',
     items: [
-      { name: 'Men', href: '/products?category=mens', icon: UserGroupIcon },
-      { name: 'Women', href: '/products?category=womens', icon: UserGroupIcon },
-      { name: 'Kids', href: '/products?category=kids', icon: UserGroupIcon },
+      { name: 'Unisex Topwear', href: '/products?category=unisex', icon: UserGroupIcon },
+      { name: 'Unisex Bottoms', href: '/products?category=unisex-bottoms', icon: UserGroupIcon },
+      { name: 'Accessories', href: '/products?category=accessories', icon: UserGroupIcon },
+      { name: 'Footwear', href: '/products?category=footwear', icon: UserGroupIcon },
     ]
   },
   {

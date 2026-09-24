@@ -188,7 +188,7 @@ export default function ProductDetailPage() {
                 selectedVariant={selectedVariant}
                 onVariantSelect={setSelectedVariant}
                 showStock={true}
-                gender={product.category?.name?.toLowerCase().includes('women') ? 'women' : 'men'}
+                gender={product.category?.name?.toLowerCase().includes('fitted') ? 'fitted' : 'unisex'}
               />
             </div>
 

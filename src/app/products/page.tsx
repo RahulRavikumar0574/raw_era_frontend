@@ -61,9 +61,6 @@ function ProductsPageContent() {
     if (!currentCategory) return null;
     const found = categories.find(c => c.slug === currentCategory);
     const name = found?.name ?? currentCategory;
-    if (name.toLowerCase() === 'mens') return 'Men';
-    if (name.toLowerCase() === 'womens') return 'Women';
-    if (name.toLowerCase() === 'kids') return 'Kids';
     return name.charAt(0).toUpperCase() + name.slice(1);
   }, [currentCategory, categories]);
 
@@ -222,11 +219,7 @@ function ProductsPageContent() {
               All Products
             </button>
             {categories.map((cat) => {
-              const displayName = 
-                cat.slug === 'mens' ? 'Men' :
-                cat.slug === 'womens' ? 'Women' :
-                cat.slug === 'kids' ? 'Kids' :
-                cat.name;
+              const displayName = cat.name;
               return (
                 <button
                   key={cat.slug}
