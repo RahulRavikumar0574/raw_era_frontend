@@ -15,7 +15,7 @@ export default function ReturnsPage() {
             <ArrowPathIcon className="w-8 h-8 text-orange-600" />
           </div>
           <h1 className="text-3xl font-bold text-gray-900 mb-2">Returns & Refunds</h1>
-          <p className="text-gray-600">Easy returns within 30 days of purchase</p>
+          <p className="text-gray-600">Easy returns within 7 days of purchase</p>
         </motion.div>
 
         <div className="space-y-6">
@@ -29,7 +29,7 @@ export default function ReturnsPage() {
             <div className="space-y-4 text-gray-600">
               <p>
                 We want you to be completely satisfied with your purchase. If you're not happy with your order, 
-                you can return it within 30 days of delivery for a full refund or exchange.
+                you can return it within 7 days of delivery for a full refund or exchange.
               </p>
               <div className="bg-green-50 border border-green-200 rounded-lg p-4">
                 <div className="flex items-start gap-3">

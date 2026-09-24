@@ -14,16 +14,13 @@ const faqs = [
       },
       {
         q: 'What payment methods do you accept?',
-        a: 'We accept Credit/Debit Cards, UPI, Net Banking, Wallets, and Cash on Delivery (COD). All payments are processed securely.'
+        a: 'We accept Credit/Debit Cards, UPI, Net Banking, and Wallets. All payments are processed securely.'
       },
       {
         q: 'Can I modify or cancel my order?',
         a: 'You can modify or cancel your order within 24 hours of placing it. Contact our customer service team immediately for assistance.'
       },
-      {
-        q: 'Do you offer Cash on Delivery?',
-        a: 'Yes, COD is available for orders across India. A small COD handling fee may apply for certain orders.'
-      }
+
     ]
   },
   {
@@ -52,7 +49,7 @@ const faqs = [
     questions: [
       {
         q: 'What is your return policy?',
-        a: 'We offer 30-day returns on most items. Products must be unused, with original tags, and in original packaging. Visit our Returns page for complete details.'
+        a: 'We offer 7-day returns on most items. Products must be unused, with original tags, and in original packaging. Visit our Returns page for complete details.'
       },
       {
         q: 'How do I return an item?',

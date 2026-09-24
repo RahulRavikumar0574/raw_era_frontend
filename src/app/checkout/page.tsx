@@ -330,13 +330,13 @@ export default function CheckoutPage() {
                   </h2>
                   <div className="space-y-4">
                     <div className="space-y-3">
-                      {['razorpay', 'cod'].map((method) => (
+                      {['razorpay'].map((method) => (
                         <label key={method} className={`flex items-center p-4 border-2 rounded-lg cursor-pointer ${formData.paymentMethod === method ? 'border-orange-500 bg-orange-50' : 'border-gray-200'
                           }`}>
                           <input type="radio" name="paymentMethod" value={method} checked={formData.paymentMethod === method}
                             onChange={handleInputChange} className="w-4 h-4 text-orange-600" />
                           <span className="ml-3 font-medium">
-                            {method === 'razorpay' ? 'Razorpay (Cards, UPI, Netbanking)' : 'Cash on Delivery'}
+                            Razorpay (Cards, UPI, Netbanking)
                           </span>
                         </label>
                       ))}
@@ -410,7 +410,7 @@ export default function CheckoutPage() {
                   </div>
                   <div className="flex items-center gap-2 text-sm text-gray-600">
                     <CheckCircleIcon className="w-5 h-5 text-green-600" />
-                    <span>30-Day Returns</span>
+                    <span>7-Day Returns</span>
                   </div>
                 </div>
               </div>

@@ -131,7 +131,7 @@ export default function Footer() {
               <ArrowPathIcon className="w-5 h-5 text-orange-500" />
             </div>
             <div>
-              <h4 className="text-white font-semibold text-sm mb-1">30-Day Returns</h4>
+              <h4 className="text-white font-semibold text-sm mb-1">7-Day Returns</h4>
               <p className="text-xs text-gray-400">Easy returns & exchanges</p>
             </div>
           </div>
@@ -144,15 +144,7 @@ export default function Footer() {
               <p className="text-xs text-gray-400">100% secure transactions</p>
             </div>
           </div>
-          <div className="flex items-start gap-3">
-            <div className="w-10 h-10 bg-gray-800 rounded-lg flex items-center justify-center flex-shrink-0">
-              <ShoppingBagIcon className="w-5 h-5 text-orange-500" />
-            </div>
-            <div>
-              <h4 className="text-white font-semibold text-sm mb-1">COD Available</h4>
-              <p className="text-xs text-gray-400">Cash on delivery option</p>
-            </div>
-          </div>
+
         </div>
         {/* Bottom Section */}
         <div className="flex flex-col md:flex-row justify-between items-center gap-4 text-sm">
