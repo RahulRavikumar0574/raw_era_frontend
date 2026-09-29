@@ -1,7 +1,6 @@
 "use client";
 import { useState } from "react";
-import { Carousel } from 'react-responsive-carousel';
-import "react-responsive-carousel/lib/styles/carousel.min.css";
+
 import Link from "next/link";
 import { IconX, IconTrendingUp, IconShield, IconTruck } from "@tabler/icons-react";
 import { motion } from 'framer-motion';
@@ -50,46 +49,11 @@ export default function HomePage() {
           </div>
         </div>
       )}
-      {/* Hero Carousel */}
-      <div className="w-full bg-white dark:bg-[#18181b] min-h-[500px] relative">
-        <Carousel showThumbs={false} autoPlay infiniteLoop showStatus={false} showIndicators={true} showArrows={true} interval={5000} className="hero-carousel">
-          <div className="relative h-[500px]">
-            <img src="/banner1.webp" alt="Banner 1" className="object-cover h-full" onError={(e) => e.currentTarget.src = "https://images.unsplash.com/photo-1441986300917-64674bd600d8?auto=format&fit=crop&w=1600&q=80"} />
-            <div className="absolute inset-0 bg-gradient-to-r from-black/60 to-transparent flex items-center">
-              <div className="max-w-7xl mx-auto px-8 text-white">
-                <motion.div initial={{ opacity: 0, x: -50 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 0.2 }}>
-                  <h2 className="text-5xl font-bold mb-4">New Season Collection</h2>
-                  <p className="text-xl mb-6 text-gray-200">Discover the latest trends in fashion</p>
-                  <Link href="/products" className="inline-block bg-orange-600 hover:bg-orange-700 text-white px-8 py-3 rounded-lg font-semibold transition-colors">Shop Now</Link>
-                </motion.div>
-              </div>
-            </div>
-          </div>
-          <div className="relative h-[500px]">
-            <img src="/banner2.webp" alt="Banner 2" className="object-cover h-full" onError={(e) => e.currentTarget.src = "https://images.unsplash.com/photo-1483985988355-763728e1935b?auto=format&fit=crop&w=1600&q=80"} />
-            <div className="absolute inset-0 bg-gradient-to-r from-black/60 to-transparent flex items-center">
-              <div className="max-w-7xl mx-auto px-8 text-white">
-                <motion.div initial={{ opacity: 0, x: -50 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 0.2 }}>
-                  <h2 className="text-5xl font-bold mb-4">Premium Quality</h2>
-                  <p className="text-xl mb-6 text-gray-200">Crafted with care and attention to detail</p>
-                  <Link href="/products?featured=true" className="inline-block bg-orange-600 hover:bg-orange-700 text-white px-8 py-3 rounded-lg font-semibold transition-colors">Explore</Link>
-                </motion.div>
-              </div>
-            </div>
-          </div>
-          <div className="relative h-[500px]">
-            <img src="/banner3.webp" alt="Banner 3" className="object-cover h-full" onError={(e) => e.currentTarget.src = "https://images.unsplash.com/photo-1490481651871-ab68de25d43d?auto=format&fit=crop&w=1600&q=80"} />
-            <div className="absolute inset-0 bg-gradient-to-r from-black/60 to-transparent flex items-center">
-              <div className="max-w-7xl mx-auto px-8 text-white">
-                <motion.div initial={{ opacity: 0, x: -50 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 0.2 }}>
-                  <h2 className="text-5xl font-bold mb-4">Limited Edition</h2>
-                  <p className="text-xl mb-6 text-gray-200">Exclusive designs you won't find anywhere else</p>
-                  <Link href="/products?new=true" className="inline-block bg-orange-600 hover:bg-orange-700 text-white px-8 py-3 rounded-lg font-semibold transition-colors">Shop Limited</Link>
-                </motion.div>
-              </div>
-            </div>
-          </div>
-        </Carousel>
+      {/* Hero Banner */}
+      <div className="w-full bg-white dark:bg-[#18181b] relative">
+        <div className="relative w-full flex justify-center bg-black">
+          <img src="/IMG_4997.PNG" alt="Hero Banner" className="w-full h-auto object-contain max-h-screen" />
+        </div>
       </div>
 
       {/* Categories Section */}

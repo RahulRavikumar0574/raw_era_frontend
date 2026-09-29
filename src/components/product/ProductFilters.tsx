@@ -259,49 +259,7 @@ function FilterContent({
         </AnimatePresence>
       </div>
 
-      {/* Brands */}
-      <div className="space-y-3">
-        <button
-          onClick={() => onToggleSection('brand')}
-          className="flex items-center justify-between w-full text-left"
-        >
-          <h4 className="font-medium text-gray-900">Brand</h4>
-          {expandedSections.brand ? (
-            <ChevronUpIcon className="w-5 h-5 text-gray-500" />
-          ) : (
-            <ChevronDownIcon className="w-5 h-5 text-gray-500" />
-          )}
-        </button>
-        
-        <AnimatePresence>
-          {expandedSections.brand && (
-            <motion.div
-              initial={{ height: 0, opacity: 0 }}
-              animate={{ height: 'auto', opacity: 1 }}
-              exit={{ height: 0, opacity: 0 }}
-              className="space-y-2 max-h-48 overflow-y-auto"
-            >
-              {availableBrands.map(brand => (
-                <label key={brand} className="flex items-center space-x-2 cursor-pointer">
-                  <input
-                    type="checkbox"
-                    checked={filters.brand?.includes(brand) || false}
-                    onChange={(e) => {
-                      const currentBrands = filters.brand || [];
-                      const newBrands = e.target.checked
-                        ? [...currentBrands, brand]
-                        : currentBrands.filter(b => b !== brand);
-                      onFilterChange({ brand: newBrands });
-                    }}
-                    className="rounded border-gray-300 text-red-600 focus:ring-red-500"
-                  />
-                  <span className="text-sm text-gray-700">{brand}</span>
-                </label>
-              ))}
-            </motion.div>
-          )}
-        </AnimatePresence>
-      </div>
+
 
       {/* Rating */}
       <div className="space-y-3">
