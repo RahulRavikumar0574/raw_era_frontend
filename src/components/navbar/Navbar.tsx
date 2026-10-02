@@ -191,7 +191,7 @@ export default function NavbarTop({ onHamburgerClick }: { onHamburgerClick?: () 
               <Link
                 key={link.label}
                 href={link.href}
-                className="px-4 py-2 text-gray-700 hover:text-orange-600 hover:bg-orange-50 rounded-md font-medium transition-all duration-200"
+                className="px-4 py-2 text-gray-700 hover:text-orange-600 hover:bg-orange-50 rounded-md font-medium transition-all duration-200 whitespace-nowrap"
               >
                 {link.label}
               </Link>

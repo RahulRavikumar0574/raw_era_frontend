@@ -1,5 +1,6 @@
 "use client";
 import { useState } from "react";
+import { useToast } from '@/hooks/useToast';
 
 import Link from "next/link";
 import { IconX, IconTrendingUp, IconShield, IconTruck } from "@tabler/icons-react";
@@ -7,6 +8,28 @@ import { motion } from 'framer-motion';
 
 export default function HomePage() {
   const [drawerOpen, setDrawerOpen] = useState(false);
+  const toast = useToast();
+  const [email, setEmail] = useState('');
+
+  const handleSubscribe = async () => {
+    if (!email) {
+      toast.error('Error', 'Please enter your email address');
+      return;
+    }
+    
+    try {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL || 'http://localhost:4000'}/newsletter/subscribe`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email }),
+      });
+      if (!res.ok) throw new Error('Failed');
+      toast.success('Successfully Subscribed!', 'You will now receive updates from the host.');
+      setEmail('');
+    } catch (error) {
+      toast.error('Error', 'Failed to subscribe. Please try again later.');
+    }
+  };
 
   return (
     <div className="flex flex-col min-h-screen bg-white pt-16">
@@ -51,8 +74,8 @@ export default function HomePage() {
       )}
       {/* Hero Banner */}
       <div className="w-full bg-white dark:bg-[#18181b] relative">
-        <div className="relative w-full flex justify-center bg-black">
-          <img src="/IMG_4997.PNG" alt="Hero Banner" className="w-full h-auto object-contain max-h-screen" />
+        <div className="relative w-full flex justify-center bg-black h-[50vh] sm:h-[60vh] md:h-auto">
+          <img src="/IMG_4997.PNG" alt="Hero Banner" className="w-full h-full md:h-auto object-cover md:object-contain object-top md:object-center max-h-screen" />
         </div>
       </div>
 
@@ -81,11 +104,24 @@ export default function HomePage() {
       */}
 
       {/* CTA Section */}
-      <div className="bg-gradient-to-r from-orange-600 to-orange-700 py-16">
+      <div className="bg-gradient-to-r from-orange-600 to-orange-700 py-8 md:py-16">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center text-white">
-          <h2 className="text-3xl font-bold mb-4">Join Our Community</h2>
-          <p className="text-orange-100 mb-8 max-w-2xl mx-auto">Get exclusive access to new arrivals, special offers, and more</p>
-          <Link href="/products" className="inline-block bg-white text-orange-600 px-8 py-3 rounded-lg font-semibold hover:bg-gray-100 transition-colors">Start Shopping</Link>
+          <h2 className="text-2xl md:text-3xl font-bold mb-2 md:mb-4">Join Our Community</h2>
+          <p className="text-orange-100 mb-4 md:mb-8 text-sm md:text-base max-w-2xl mx-auto">Get exclusive access to new arrivals, special offers, and more</p>
+          <div className="flex flex-col sm:flex-row justify-center max-w-md mx-auto gap-2">
+            <input
+              type="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              placeholder="Your email"
+              className="flex-1 px-4 py-2 md:py-3 text-gray-900 rounded-lg focus:outline-none focus:ring-2 focus:ring-white"
+            />
+            <button 
+              onClick={handleSubscribe}
+              className="px-6 py-2 md:py-3 bg-gray-900 text-white rounded-lg hover:bg-gray-800 transition-colors font-medium">
+              Subscribe
+            </button>
+          </div>
         </div>
       </div>
     </div>

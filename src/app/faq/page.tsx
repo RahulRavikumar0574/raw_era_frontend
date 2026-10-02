@@ -53,7 +53,7 @@ const faqs = [
       },
       {
         q: 'How do I return an item?',
-        a: 'Go to My Orders, select the item, and click "Return Item". We\'ll arrange a free pickup from your address.'
+        a: 'Go to My Orders, select the item, and click "Return Item". Customer will have to send it back to us.'
       },
       {
         q: 'When will I receive my refund?',

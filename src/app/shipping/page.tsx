@@ -34,7 +34,6 @@ export default function ShippingPage() {
                     <h3 className="font-semibold text-gray-900 mb-1">Standard Delivery</h3>
                     <p className="text-sm text-gray-600 mb-2">5-7 business days</p>
                     <p className="text-sm text-gray-600">Free shipping on orders above ₹500</p>
-                    <p className="text-sm text-orange-600 font-medium">₹50 for orders below ₹500</p>
                   </div>
                 </div>
               </div>
@@ -45,7 +44,6 @@ export default function ShippingPage() {
                     <h3 className="font-semibold text-gray-900 mb-1">Express Delivery</h3>
                     <p className="text-sm text-gray-600 mb-2">2-3 business days</p>
                     <p className="text-sm text-gray-600">Available in major cities</p>
-                    <p className="text-sm text-orange-600 font-medium">₹150 flat rate</p>
                   </div>
                 </div>
               </div>

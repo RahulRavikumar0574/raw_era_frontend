@@ -101,7 +101,7 @@ export default function ReturnsPage() {
                 <div>
                   <h3 className="font-semibold text-gray-900 mb-1">Schedule Pickup</h3>
                   <p className="text-sm text-gray-600">
-                    We'll arrange a free pickup from your address. Pack the item securely with all tags.
+                    Customer will have to send it back to us. Pack the item securely with all tags.
                   </p>
                 </div>
               </div>

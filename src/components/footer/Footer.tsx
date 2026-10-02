@@ -1,4 +1,7 @@
+"use client";
 import Link from 'next/link';
+import { useState } from 'react';
+import { useToast } from '@/hooks/useToast';
 import {
   EnvelopeIcon,
   PhoneIcon,
@@ -40,6 +43,29 @@ function ContactDetails() {
 }
 
 export default function Footer() {
+  const toast = useToast();
+  const [email, setEmail] = useState('');
+
+  const handleSubscribe = async () => {
+    if (!email) {
+      toast.error('Error', 'Please enter your email address');
+      return;
+    }
+    
+    try {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL || 'http://localhost:4000'}/newsletter/subscribe`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email }),
+      });
+      if (!res.ok) throw new Error('Failed');
+      toast.success('Successfully Subscribed!', 'You will now receive updates from the host.');
+      setEmail('');
+    } catch (error) {
+      toast.error('Error', 'Failed to subscribe. Please try again later.');
+    }
+  };
+
   return (
     <footer className="bg-gray-900 text-gray-300 pt-12 pb-6 mt-12">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -66,7 +92,7 @@ export default function Footer() {
             <ul className="space-y-2">
               <li><Link href="/" className="text-sm hover:text-orange-500 transition-colors">Home</Link></li>
               <li><Link href="/products" className="text-sm hover:text-orange-500 transition-colors">Shop</Link></li>
-              <li><Link href="/categories" className="text-sm hover:text-orange-500 transition-colors">Categories</Link></li>
+
               <li><Link href="/track-order" className="text-sm hover:text-orange-500 transition-colors">Track Order</Link></li>
               <li><Link href="/orders" className="text-sm hover:text-orange-500 transition-colors">My Orders</Link></li>
               <li><Link href="/wishlist" className="text-sm hover:text-orange-500 transition-colors">Wishlist</Link></li>
@@ -82,8 +108,6 @@ export default function Footer() {
               <li><Link href="/returns" className="text-sm hover:text-orange-500 transition-colors">Returns & Refunds</Link></li>
               <li><Link href="/shipping" className="text-sm hover:text-orange-500 transition-colors">Shipping Info</Link></li>
               <li><Link href="/faq" className="text-sm hover:text-orange-500 transition-colors">FAQs</Link></li>
-              <li><Link href="/size-guide" className="text-sm hover:text-orange-500 transition-colors">Size Guide</Link></li>
-              <li><Link href="/privacy" className="text-sm hover:text-orange-500 transition-colors">Privacy Policy</Link></li>
               <li><Link href="/feedback" className="text-sm hover:text-orange-500 transition-colors">Contact Us</Link></li>
             </ul>
           </div>
@@ -103,10 +127,14 @@ export default function Footer() {
             <div className="flex gap-2 mb-4">
               <input
                 type="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
                 placeholder="Your email"
                 className="flex-1 px-3 py-2 bg-gray-800 border border-gray-700 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent"
               />
-              <button className="px-4 py-2 bg-orange-600 text-white rounded-lg hover:bg-orange-700 transition-colors text-sm font-medium">
+              <button 
+                onClick={handleSubscribe}
+                className="px-4 py-2 bg-orange-600 text-white rounded-lg hover:bg-orange-700 transition-colors text-sm font-medium">
                 Subscribe
               </button>
             </div>
