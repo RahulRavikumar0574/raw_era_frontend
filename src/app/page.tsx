@@ -1,15 +1,29 @@
 "use client";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useToast } from '@/hooks/useToast';
 
 import Link from "next/link";
 import { IconX, IconTrendingUp, IconShield, IconTruck } from "@tabler/icons-react";
 import { motion } from 'framer-motion';
 
+const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL || 'http://localhost:4000';
+
 export default function HomePage() {
   const [drawerOpen, setDrawerOpen] = useState(false);
   const toast = useToast();
   const [email, setEmail] = useState('');
+  const [heroImage, setHeroImage] = useState('/IMG_4997.PNG');
+
+  useEffect(() => {
+    fetch(`${backendUrl}/settings/public`)
+      .then(r => r.json())
+      .then(data => {
+        if (data?.settings?.['homepage.hero_image']) {
+          setHeroImage(data.settings['homepage.hero_image']);
+        }
+      })
+      .catch(() => {});
+  }, []);
 
   const handleSubscribe = async () => {
     if (!email) {
@@ -18,7 +32,7 @@ export default function HomePage() {
     }
     
     try {
-      const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL || 'http://localhost:4000'}/newsletter/subscribe`, {
+      const res = await fetch(`${backendUrl}/newsletter/subscribe`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email }),
@@ -75,7 +89,7 @@ export default function HomePage() {
       {/* Hero Banner */}
       <div className="w-full bg-white dark:bg-[#18181b] relative">
         <div className="relative w-full flex justify-center bg-black h-[50vh] sm:h-[60vh] md:h-auto">
-          <img src="/IMG_4997.PNG" alt="Hero Banner" className="w-full h-full md:h-auto object-cover md:object-contain object-top md:object-center max-h-screen" />
+          <img src={heroImage} alt="Hero Banner" className="w-full h-full md:h-auto object-cover md:object-contain object-top md:object-center max-h-screen" />
         </div>
       </div>
 

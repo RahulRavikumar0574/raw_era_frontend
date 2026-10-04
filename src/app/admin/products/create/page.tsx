@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useRouter } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useForm, useFieldArray } from 'react-hook-form';
@@ -18,7 +18,13 @@ import {
   CubeIcon,
   InformationCircleIcon,
   LinkIcon,
+  ArrowUpTrayIcon,
+  StarIcon,
+  ArrowUpIcon,
+  ArrowDownIcon,
 } from '@heroicons/react/24/outline';
+import { StarIcon as StarSolidIcon } from '@heroicons/react/24/solid';
+import ProductImageUploader from '@/components/admin/ProductImageUploader';
 import { useToast } from '@/hooks/useToast';
 import { cn } from '@/lib/utils';
 
@@ -163,6 +169,7 @@ export default function CreateProductPage() {
         setCategories([
           { id: 'mens', name: "Men's Clothing", slug: 'mens' },
           { id: 'womens', name: "Women's Clothing", slug: 'womens' },
+          { id: 'unisex', name: "Unisex Clothing", slug: 'unisex' },
           { id: 'kids', name: 'Kids Clothing', slug: 'kids' },
           { id: 'accessories', name: 'Accessories', slug: 'accessories' },
         ]);
@@ -180,10 +187,7 @@ export default function CreateProductPage() {
     setValue('tags', (watchTags || []).filter(t => t !== tag));
   };
 
-  const addImageUrl = () => setImageUrls(prev => [...prev, '']);
-  const removeImageUrl = (i: number) => setImageUrls(prev => prev.filter((_, idx) => idx !== i));
-  const updateImageUrl = (i: number, val: string) =>
-    setImageUrls(prev => prev.map((u, idx) => (idx === i ? val : u)));
+
 
   const computedDiscount = (() => {
     if (watchDiscountRate && watchDiscountRate > 0) return watchDiscountRate;
@@ -385,50 +389,22 @@ export default function CreateProductPage() {
             </AnimatePresence>
           </SectionCard>
 
-          {/* ── Product Images (URL-based) ── */}
-          <SectionCard title="Product Images" icon={PhotoIcon} badge="up to 5 URLs" defaultOpen delay={0.1}>
+          {/* ── Product Images (JPEG / PNG Uploads) ── */}
+          <SectionCard
+            title="Product Images"
+            icon={PhotoIcon}
+            badge={`${imageUrls.filter(u => u.trim()).length} image(s)`}
+            defaultOpen
+            delay={0.1}
+          >
             <p className="text-sm text-gray-500 mb-4">
-              Paste direct image URLs (e.g. from Cloudinary, imgbb, or any CDN). The first URL will be the primary image shown in listings.
+              Upload JPEG or PNG images for this product. The image marked as <strong>Primary Image</strong> will be shown as the main store cover photo.
             </p>
-            <div className="space-y-3">
-              {imageUrls.map((url, i) => (
-                <div key={i} className="flex gap-3 items-start">
-                  <div className="flex-shrink-0 w-12 h-12 rounded-lg border border-gray-200 bg-gray-50 overflow-hidden">
-                    {url ? (
-                      <img src={url} alt="" className="w-full h-full object-cover" onError={(e) => { (e.target as HTMLImageElement).style.display = 'none'; }} />
-                    ) : (
-                      <div className="w-full h-full flex items-center justify-center">
-                        <PhotoIcon className="w-5 h-5 text-gray-300" />
-                      </div>
-                    )}
-                  </div>
-                  <div className="flex-1 relative">
-                    <LinkIcon className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
-                    <input
-                      type="url"
-                      value={url}
-                      onChange={e => updateImageUrl(i, e.target.value)}
-                      className="w-full pl-9 pr-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500 transition-colors text-sm"
-                      placeholder={i === 0 ? 'Primary image URL (required for image display)' : `Image ${i + 1} URL (optional)`}
-                    />
-                  </div>
-                  {i > 0 && (
-                    <button type="button" onClick={() => removeImageUrl(i)} className="p-2 text-gray-400 hover:text-red-500 transition-colors mt-0.5">
-                      <XMarkIcon className="w-5 h-5" />
-                    </button>
-                  )}
-                  {i === 0 && (
-                    <span className="mt-3 px-2 py-0.5 bg-orange-100 text-orange-700 text-xs rounded-full font-medium whitespace-nowrap">Primary</span>
-                  )}
-                </div>
-              ))}
-            </div>
-            {imageUrls.length < 5 && (
-              <button type="button" onClick={addImageUrl} className="mt-3 flex items-center gap-2 px-4 py-2 border-2 border-dashed border-orange-300 text-orange-600 rounded-lg hover:border-orange-500 hover:bg-orange-50 transition-all w-full justify-center text-sm font-medium">
-                <PlusIcon className="w-4 h-4" />
-                Add Another Image URL
-              </button>
-            )}
+
+            <ProductImageUploader
+              images={imageUrls}
+              onChange={setImageUrls}
+            />
           </SectionCard>
 
           {/* ── Variants ── */}
