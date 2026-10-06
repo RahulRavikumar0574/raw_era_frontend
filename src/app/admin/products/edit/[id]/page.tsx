@@ -156,21 +156,33 @@ export default function EditProductPage() {
 
   // Load categories
   useEffect(() => {
-    fetch(`${backendUrl}/categories`)
-      .then(r => r.json())
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 10000); // 10 second timeout
+
+    fetch(`${backendUrl}/categories`, { signal: controller.signal })
+      .then(r => {
+        clearTimeout(timeoutId);
+        if (!r.ok) throw new Error('Failed to fetch categories');
+        return r.json();
+      })
       .then((data: any) => {
         const cats = Array.isArray(data) ? data : Array.isArray(data?.categories) ? data.categories : [];
-        setCategories(cats.filter((c: any) => c.isActive));
+        setCategories(cats.filter((c: any) => c.isActive && !c.slug?.toLowerCase().includes('accessories') && !c.name?.toLowerCase().includes('accessories')));
       })
       .catch(() => {
+        // Fallback categories if backend unreachable or times out
         setCategories([
           { id: 'mens', name: "Men's Clothing", slug: 'mens' },
           { id: 'womens', name: "Women's Clothing", slug: 'womens' },
           { id: 'unisex', name: "Unisex Clothing", slug: 'unisex' },
           { id: 'kids', name: 'Kids Clothing', slug: 'kids' },
-          { id: 'accessories', name: 'Accessories', slug: 'accessories' },
         ]);
       });
+
+    return () => {
+      clearTimeout(timeoutId);
+      controller.abort();
+    };
   }, []);
 
   // Load existing product data

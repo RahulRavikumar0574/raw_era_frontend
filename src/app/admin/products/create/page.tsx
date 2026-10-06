@@ -158,24 +158,33 @@ export default function CreateProductPage() {
 
   // Load real categories from backend
   useEffect(() => {
-    fetch(`${backendUrl}/categories`)
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 10000); // 10 second timeout
+
+    fetch(`${backendUrl}/categories`, { signal: controller.signal })
       .then(r => {
+        clearTimeout(timeoutId);
         if (!r.ok) throw new Error('Failed to fetch categories');
         return r.json();
       })
       .then((data: any) => {
         const cats = Array.isArray(data) ? data : Array.isArray(data?.categories) ? data.categories : [];
-        setCategories(cats.filter((c: any) => c.isActive && (
-          (c.slug && c.slug.toLowerCase().includes('unisex')) || 
-          (c.name && c.name.toLowerCase().includes('unisex'))
-        )));
+        setCategories(cats.filter((c: any) => c.isActive && !c.slug?.toLowerCase().includes('accessories') && !c.name?.toLowerCase().includes('accessories')));
       })
       .catch(() => {
-        // Fallback categories if backend unreachable
+        // Fallback categories if backend unreachable or times out
         setCategories([
+          { id: 'mens', name: "Men's Clothing", slug: 'mens' },
+          { id: 'womens', name: "Women's Clothing", slug: 'womens' },
           { id: 'unisex', name: "Unisex Clothing", slug: 'unisex' },
+          { id: 'kids', name: 'Kids Clothing', slug: 'kids' },
         ]);
       });
+
+    return () => {
+      clearTimeout(timeoutId);
+      controller.abort();
+    };
   }, []);
 
   const addTag = () => {
