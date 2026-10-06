@@ -162,16 +162,12 @@ export default function CreateProductPage() {
       .then(r => r.json())
       .then((data: any) => {
         const cats = Array.isArray(data) ? data : Array.isArray(data?.categories) ? data.categories : [];
-        setCategories(cats.filter((c: any) => c.isActive));
+        setCategories(cats.filter((c: any) => c.isActive && c.slug.includes('unisex')));
       })
       .catch(() => {
         // Fallback categories if backend unreachable
         setCategories([
-          { id: 'mens', name: "Men's Clothing", slug: 'mens' },
-          { id: 'womens', name: "Women's Clothing", slug: 'womens' },
           { id: 'unisex', name: "Unisex Clothing", slug: 'unisex' },
-          { id: 'kids', name: 'Kids Clothing', slug: 'kids' },
-          { id: 'accessories', name: 'Accessories', slug: 'accessories' },
         ]);
       });
   }, []);
