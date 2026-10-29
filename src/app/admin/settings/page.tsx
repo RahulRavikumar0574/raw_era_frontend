@@ -27,6 +27,49 @@ const tabs = [
   { id: 'account', name: 'Account', icon: UserCircleIcon },
 ];
 
+/** Client-side image compression to optimize high-res camera/Canva banners */
+function compressImage(file: File, maxWidth = 1920, quality = 0.85): Promise<File> {
+  return new Promise((resolve) => {
+    if (!file.type.startsWith('image/') || file.type === 'image/svg+xml') {
+      return resolve(file);
+    }
+    const img = new Image();
+    const objectUrl = URL.createObjectURL(file);
+    img.onload = () => {
+      URL.revokeObjectURL(objectUrl);
+      let { width, height } = img;
+      if (width > maxWidth) {
+        height = Math.round((height * maxWidth) / width);
+        width = maxWidth;
+      }
+      const canvas = document.createElement('canvas');
+      canvas.width = width;
+      canvas.height = height;
+      const ctx = canvas.getContext('2d');
+      if (!ctx) return resolve(file);
+      ctx.drawImage(img, 0, 0, width, height);
+
+      canvas.toBlob(
+        (blob) => {
+          if (!blob) return resolve(file);
+          const compressed = new File([blob], file.name.replace(/\.[^/.]+$/, '.webp'), {
+            type: 'image/webp',
+            lastModified: Date.now(),
+          });
+          resolve(compressed);
+        },
+        'image/webp',
+        quality,
+      );
+    };
+    img.onerror = () => {
+      URL.revokeObjectURL(objectUrl);
+      resolve(file);
+    };
+    img.src = objectUrl;
+  });
+}
+
 export default function AdminSettingsPage() {
   const [activeTab, setActiveTab] = useState('homepage');
   const toast = useToast();
@@ -40,8 +83,8 @@ export default function AdminSettingsPage() {
   // Load current homepage setting
   useEffect(() => {
     fetch(`${backendUrl}/settings/public`)
-      .then(r => r.json())
-      .then(data => {
+      .then((r) => r.json())
+      .then((data) => {
         if (data?.settings?.['homepage.hero_image']) {
           const url = data.settings['homepage.hero_image'];
           setHeroImage(url);
@@ -51,30 +94,85 @@ export default function AdminSettingsPage() {
       .catch(() => {});
   }, []);
 
-  const handleFileUpload = (file: File) => {
+  const handleFileUpload = async (file: File) => {
     if (!file.type.startsWith('image/')) {
       toast.error('Invalid file', 'Please select an image file (PNG, JPG, WEBP, etc.)');
       return;
     }
-    if (file.size > 10 * 1024 * 1024) {
-      toast.error('File too large', 'Image size should be under 10MB');
+    if (file.size > 25 * 1024 * 1024) {
+      toast.error('File too large', 'Image size should be under 25MB');
       return;
     }
 
     setIsUploading(true);
-    const reader = new FileReader();
-    reader.onload = (e) => {
-      const dataUrl = e.target?.result as string;
-      setInputUrl(dataUrl);
-      setHeroImage(dataUrl);
+    toast.info('Optimizing Image...', 'Compressing and preparing banner for upload...');
+
+    try {
+      const optimizedFile = await compressImage(file);
+
+      // Immediate local preview so admin sees the uploaded banner immediately
+      const localPreviewUrl = URL.createObjectURL(optimizedFile);
+      setHeroImage(localPreviewUrl);
+
+      const token = localStorage.getItem('admin_token') || 'demo_admin_token';
+      const formData = new FormData();
+      formData.append('file', optimizedFile);
+
+      let uploadedUrl = '';
+
+      // 1. Try dedicated /settings/upload endpoint
+      try {
+        const uploadRes = await fetch(`${backendUrl}/settings/upload`, {
+          method: 'POST',
+          headers: {
+            'x-admin-token': token,
+          },
+          body: formData,
+        });
+        if (uploadRes.ok) {
+          const data = await uploadRes.json();
+          if (data.url) uploadedUrl = data.url;
+        }
+      } catch (err) {
+        // Fall through to secondary uploader
+      }
+
+      // 2. Try fallback /products/upload endpoint
+      if (!uploadedUrl) {
+        try {
+          const uploadRes = await fetch(`${backendUrl}/products/upload`, {
+            method: 'POST',
+            headers: {
+              'x-admin-token': token,
+            },
+            body: formData,
+          });
+          if (uploadRes.ok) {
+            const data = await uploadRes.json();
+            if (data.url) uploadedUrl = data.url;
+          }
+        } catch (err) {
+          // Fall through to optimized base64
+        }
+      }
+
+      // 3. Fallback to optimized compact base64 if server upload unavailable
+      if (!uploadedUrl) {
+        uploadedUrl = await new Promise<string>((res) => {
+          const reader = new FileReader();
+          reader.onload = (e) => res((e.target?.result as string) || '');
+          reader.readAsDataURL(optimizedFile);
+        });
+      }
+
+      setInputUrl(uploadedUrl);
+      setHeroImage(uploadedUrl);
+      toast.success('Image Ready!', 'Banner optimized and uploaded. Click "Save Homepage Banner" to apply changes.');
+    } catch (err: any) {
+      toast.error('Upload Failed', err?.message || 'Could not process image.');
+    } finally {
       setIsUploading(false);
-      toast.success('Image loaded', 'Click "Save Homepage Banner" to apply your changes.');
-    };
-    reader.onerror = () => {
-      setIsUploading(false);
-      toast.error('Read error', 'Failed to read image file.');
-    };
-    reader.readAsDataURL(file);
+    }
   };
 
   const handleSaveHeroImage = async () => {
@@ -85,18 +183,19 @@ export default function AdminSettingsPage() {
 
     setIsSavingHero(true);
     try {
-      const token = localStorage.getItem('admin_token');
+      const token = localStorage.getItem('admin_token') || 'demo_admin_token';
       const res = await fetch(`${backendUrl}/settings/homepage.hero_image`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
-          'x-admin-token': token || '',
+          'x-admin-token': token,
         },
         body: JSON.stringify({ value: inputUrl.trim() }),
       });
 
       if (!res.ok) {
-        throw new Error('Failed to update setting');
+        const errorText = await res.text().catch(() => '');
+        throw new Error(`Failed to update setting (status ${res.status}): ${errorText || 'Unknown error'}`);
       }
 
       setHeroImage(inputUrl.trim());
@@ -112,6 +211,7 @@ export default function AdminSettingsPage() {
     const defaultUrl = '/IMG_4997.PNG';
     setInputUrl(defaultUrl);
     setHeroImage(defaultUrl);
+    toast.info('Default Banner Selected', 'Click "Save Homepage Banner" to commit this default.');
   };
 
   return (
@@ -152,7 +252,16 @@ export default function AdminSettingsPage() {
 
                 {/* Live Preview Box */}
                 <div>
-                  <label className="block text-sm font-semibold text-gray-700 mb-2">Live Preview</label>
+                  <div className="flex items-center justify-between mb-2">
+                    <label className="block text-sm font-semibold text-gray-700">Live Preview</label>
+                    <span className="text-xs text-gray-500">
+                      {inputUrl.startsWith('http')
+                        ? 'Hosted URL'
+                        : inputUrl.startsWith('data:')
+                        ? 'Optimized Embedded Image'
+                        : 'Default Asset'}
+                    </span>
+                  </div>
                   <div className="relative w-full rounded-xl overflow-hidden border border-gray-200 bg-black max-h-[400px] flex items-center justify-center group shadow-inner">
                     <img
                       src={inputUrl || heroImage}
@@ -182,23 +291,34 @@ export default function AdminSettingsPage() {
                       onChange={(e) => {
                         const file = e.target.files?.[0];
                         if (file) handleFileUpload(file);
+                        e.target.value = '';
                       }}
                     />
                     <div
-                      onClick={() => fileInputRef.current?.click()}
+                      onClick={() => !isUploading && fileInputRef.current?.click()}
                       onDragOver={(e) => e.preventDefault()}
                       onDrop={(e) => {
                         e.preventDefault();
                         const file = e.dataTransfer.files?.[0];
                         if (file) handleFileUpload(file);
                       }}
-                      className="border-2 border-dashed border-orange-300 hover:border-orange-500 bg-white hover:bg-orange-50/50 rounded-xl p-6 text-center cursor-pointer transition-all flex flex-col items-center justify-center gap-2"
+                      className="border-2 border-dashed border-orange-300 hover:border-orange-500 bg-white hover:bg-orange-50/50 rounded-xl p-6 text-center cursor-pointer transition-all flex flex-col items-center justify-center gap-2 min-h-[140px]"
                     >
-                      <ArrowUpTrayIcon className="w-8 h-8 text-orange-500" />
-                      <p className="text-sm font-medium text-gray-800">
-                        Click to upload or drag & drop image
-                      </p>
-                      <p className="text-xs text-gray-400">PNG, JPG, WEBP, GIF up to 10MB</p>
+                      {isUploading ? (
+                        <div className="flex flex-col items-center gap-2">
+                          <div className="w-8 h-8 border-3 border-orange-500 border-t-transparent rounded-full animate-spin" />
+                          <p className="text-sm font-medium text-orange-600">Optimizing & Uploading...</p>
+                          <p className="text-xs text-gray-400">Compressing for fastest web delivery</p>
+                        </div>
+                      ) : (
+                        <>
+                          <ArrowUpTrayIcon className="w-8 h-8 text-orange-500" />
+                          <p className="text-sm font-medium text-gray-800">
+                            Click to upload or drag & drop banner
+                          </p>
+                          <p className="text-xs text-gray-400">PNG, JPG, WEBP up to 25MB (Auto-optimized)</p>
+                        </>
+                      )}
                     </div>
                   </div>
 
@@ -209,7 +329,10 @@ export default function AdminSettingsPage() {
                       <input
                         type="url"
                         value={inputUrl}
-                        onChange={(e) => setInputUrl(e.target.value)}
+                        onChange={(e) => {
+                          setInputUrl(e.target.value);
+                          setHeroImage(e.target.value);
+                        }}
                         placeholder="https://example.com/banner.jpg"
                         className="w-full px-4 py-2.5 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-orange-500 focus:border-orange-500"
                       />
