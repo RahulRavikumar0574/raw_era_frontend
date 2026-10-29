@@ -100,7 +100,9 @@ export default function ProductDetailPage() {
     );
   }
 
-  const effectiveStock = selectedVariant?.stock ?? product.stock ?? 0;
+  const effectiveStock = (selectedVariant && selectedVariant.stock > 0)
+    ? selectedVariant.stock
+    : (product.stock ?? 0);
   const lowStockThreshold = (product as any).lowStockThreshold ?? 10;
   const images = product.images || [];
   const primaryImage = images[selectedImageIdx]?.url || images[0]?.url || '/raw_era.png';
@@ -119,11 +121,11 @@ export default function ProductDetailPage() {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
           {/* Images */}
           <div>
-            <div className="aspect-square rounded-2xl overflow-hidden bg-gray-100 mb-4">
+            <div className="rounded-2xl overflow-hidden bg-gray-100 mb-4 flex items-center justify-center" style={{ minHeight: '300px', maxHeight: '600px' }}>
               <img
                 src={primaryImage}
                 alt={images[selectedImageIdx]?.alt || product.name}
-                className="w-full h-full object-cover"
+                className="w-full h-auto object-contain max-h-[600px]"
               />
             </div>
             {images.length > 1 && (
@@ -188,6 +190,7 @@ export default function ProductDetailPage() {
                 selectedVariant={selectedVariant}
                 onVariantSelect={setSelectedVariant}
                 showStock={true}
+                productStock={product.stock ?? 0}
                 gender={product.category?.name?.toLowerCase().includes('fitted') ? 'fitted' : 'unisex'}
               />
             </div>

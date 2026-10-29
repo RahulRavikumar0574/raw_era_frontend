@@ -109,7 +109,7 @@ export default function ProductCard({
 
   const renderSizeSelector = () => {
     const hasVariants = product.variants && product.variants.filter(v => v.type?.toLowerCase() === 'size').length > 0;
-    const sizesToRender = hasVariants
+    const rawSizes = hasVariants
       ? product.variants.filter(v => v.type?.toLowerCase() === 'size')
       : [
           { id: 'def-s', value: 'S', stock: 10 },
@@ -117,6 +117,26 @@ export default function ProductCard({
           { id: 'def-l', value: 'L', stock: 10 },
           { id: 'def-xl', value: 'XL', stock: 10 },
         ];
+
+    // Expand comma-separated variant values (e.g. "S,M,L,XL,XXL,3XL") into individual buttons
+    const sizesToRender: any[] = [];
+    rawSizes.forEach((v: any) => {
+      if (v.value && v.value.includes(',')) {
+        v.value.split(',').map((s: string) => s.trim()).filter(Boolean).forEach((part: string, idx: number) => {
+          sizesToRender.push({
+            ...v,
+            id: `${v.id}-${part}-${idx}`,
+            value: part,
+            stock: v.stock > 0 ? v.stock : (product.stock || 10),
+          });
+        });
+      } else {
+        sizesToRender.push({
+          ...v,
+          stock: v.stock > 0 ? v.stock : (product.stock || 10),
+        });
+      }
+    });
 
     return (
       <div className="mt-3">
@@ -141,19 +161,16 @@ export default function ProductCard({
                   handleVariantSelect(variant);
                 }}
                 className={cn(
-                  'px-3 py-1.5 text-sm border rounded-md transition-all',
+                  'min-w-[36px] px-3 py-1.5 text-sm border rounded-lg transition-all font-medium',
                   isSelected
-                    ? 'border-orange-500 bg-orange-50 text-orange-700'
+                    ? 'border-orange-500 bg-orange-500 text-white'
                     : isOutOfStock
                     ? 'border-gray-200 bg-gray-100 text-gray-400 cursor-not-allowed opacity-50'
-                    : 'border-gray-300 hover:border-gray-400 text-gray-700'
+                    : 'border-gray-300 hover:border-orange-400 hover:bg-orange-50 text-gray-700'
                 )}
                 disabled={isOutOfStock}
               >
                 {variant.value}
-                {isOutOfStock && hasVariants && (
-                  <span className="ml-1 text-xs">(Out)</span>
-                )}
               </button>
             );
           })}
